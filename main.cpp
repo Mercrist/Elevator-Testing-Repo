@@ -3,8 +3,8 @@
 #include <iostream> //you should be able to delete these two lines once you format them where i specified
 using namespace std;
 
-#include "src/lib/States/FSM.h"
-#include "src/lib/States/Elevator.h" 
+#include "src/States/FSM.h"
+#include "src/Elevator.h" 
 
 
 int main()
