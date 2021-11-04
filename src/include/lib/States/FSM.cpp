@@ -18,7 +18,7 @@ void FSM::setup(void)
 }
  
 //should go inside some mainloop
-void FSM::energyUpdate(void)
+void FSM::energyUpdate(void) //WON'T BE TESTED FOR NOW
 {
     if(currentStateName.compareTo("Idle") == 0 && !toggle){ 
         begin = clock();

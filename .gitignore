@@ -36,7 +36,3 @@ src/.DS_Store
 # Build Folders
 .vscode/
 .pio/
-
-# Project folders
-src/Elevator
-include/

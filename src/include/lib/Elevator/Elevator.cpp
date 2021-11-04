@@ -71,6 +71,12 @@ void Elevator::set_number(uint8_t num)
     eid = num;         
 }
 
+void set_stopping_floors(Set* floors)
+{
+    stoppingFloors = floors;
+}
+
+
 //getters
 
 

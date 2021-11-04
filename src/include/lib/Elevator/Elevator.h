@@ -4,8 +4,8 @@
  * 
  */
 #pragma once
-#include <stdint.h>
-#include <Arduino.h>
+#include "Set.h"
+
 class FSM; //forward declaration
 
 // Elevator parameters
@@ -28,7 +28,6 @@ private:
         uint16_t load_weight; 
         uint16_t max_load_weight; //in lbs
         // State* elevator_state;
-        FSM* state_machine;
         Set* stoppingFloors;
 
 public:
@@ -61,6 +60,9 @@ public:
         // void set_state(State* nexState);
 
         void set_number(uint8_t num);
+
+        void set_stopping_floors(Set* floors);
+
 
         //getters
 

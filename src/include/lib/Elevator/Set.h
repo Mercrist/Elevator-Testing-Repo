@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <Arduino.h>
+
 
 //TESTED WITH INTS, WORKS
 class Set{ //singly linked
