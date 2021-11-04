@@ -3,12 +3,6 @@
 .DS_Store
 src/.DS_Store
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
 # Precompiled Headers
 *.gch
 *.pch
