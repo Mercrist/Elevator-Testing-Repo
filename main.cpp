@@ -1,5 +1,4 @@
-#include "src/States/FSM.h"
-#include "src/Elevator/Elevator.h" 
+#include "States/FSM.h"
 
 int main()
 {
