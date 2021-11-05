@@ -18,5 +18,5 @@ set(state_source_files
 )
 
 add_library(States ${state_source_files})
-target_include_directories(States PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/..)
+target_include_directories(States PUBLIC ${CMAKE_CURRENT_LIST_DIR}/..)
 target_link_libraries(States PUBLIC Elevator)
