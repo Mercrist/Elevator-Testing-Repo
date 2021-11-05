@@ -1,5 +1,6 @@
 #pragma once
-#include <stdint.h>
+using namespace std;
+#include <iostream>
 
 
 //TESTED WITH INTS, WORKS
@@ -8,7 +9,7 @@ class Set{ //singly linked
     private:
         class Node{
             private:
-                uint8_t data;
+                int data;
                 Node* next;
     
             public:
@@ -16,7 +17,7 @@ class Set{ //singly linked
                     return next;
                 };
 
-                uint8_t getValue(){
+                int getValue(){
                     return data;
                 };
 
@@ -24,12 +25,12 @@ class Set{ //singly linked
                     next = nextNode;
                 };
 
-                Node(uint8_t elem){
+                Node(int elem){
                     data = elem;
                     next = nullptr;
                 };
 
-                Node(uint8_t elem, Node* nextNode){
+                Node(int elem, Node* nextNode){
                     data = elem;
                     next = nextNode;
                 };
@@ -40,12 +41,12 @@ class Set{ //singly linked
 
     public:
         Set();
-        Set(uint8_t elem);
+        Set(int elem);
 
-        void add(uint8_t elem);
-        uint8_t get(int index);
-        bool contains(uint8_t elem);
-        bool remove(uint8_t elem);
+        void add(int elem);
+        int get(int index);
+        bool contains(int elem);
+        bool remove(int elem);
         void clear(); 
         int size(){return currSize;} 
 };

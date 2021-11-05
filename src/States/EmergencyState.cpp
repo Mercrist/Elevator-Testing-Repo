@@ -4,59 +4,58 @@ EmergencyState::EmergencyState(Elevator* elevator){
     this->elev = elevator;
 }
 
-void EmergencyState::start(){
+void EmergencyState::start(void){
     elev->set_door_status(true);
     elev->set_light_status(true);
-    Serial.println("ENTERING EMERGENCY STATE! NO COMMANDS WILL BE PROCESSED UNTIL THE ELEVATOR " + String(elev->get_number()) + " STABILIZES!");
+    cout << "ENTERING EMERGENCY STATE! NO COMMANDS WILL BE PROCESSED UNTIL THE ELEVATOR " + to_string(elev->get_number()) + " STABILIZES!" << endl;
 }
 
 
-void EmergencyState::unload(uint16_t weight){
-    uint16_t toUnload = elev->get_load_weight() - weight;
+void EmergencyState::unload(int weight){
+    int toUnload = elev->get_load_weight() - weight;
     elev->set_load_weight(toUnload);
 }
 
-void EmergencyState::showWarning(){
-    Serial.println("CURRENTLY IN EMERGENCY STATE! NO COMMANDS WILL BE PROCESSED UNTIL THE ELEVATOR " + String(elev->get_number()) + " STABILIZES!");
-    Serial.println("PARAMETERS MUST GO BACK TO THE MAXIMUM ALLOWED VALUES!");
-    Serial.println("");
-    Serial.println("PARAMETER DIFFERENCES:");
-    Serial.println("-----------------------");
+void EmergencyState::showWarning(void){
+    cout << "CURRENTLY IN EMERGENCY STATE! NO COMMANDS WILL BE PROCESSED UNTIL THE ELEVATOR " + to_string(elev->get_number()) + " STABILIZES!" << endl;
+    cout << "PARAMETERS MUST GO BACK TO THE MAXIMUM ALLOWED VALUES!" << endl;
+    cout << "" << endl;
+    cout << "PARAMETER DIFFERENCES:" << endl;
+    cout << "-----------------------" << endl;
 
     if(elev->get_current_temp() > elev->get_max_temp()){
-        Serial.println("TEMP IS " + String(elev->get_current_temp()) + "! MUST LOWER BY: " + String(elev->get_current_temp()-elev->get_max_temp()) + " DEGREES F!");
+        cout << "TEMP IS " + to_string(elev->get_current_temp()) + "! MUST LOWER BY: " + to_string(elev->get_current_temp()-elev->get_max_temp()) + " DEGREES F!" << endl;
     }
 
     else if(elev->get_current_temp() <= elev->get_max_temp()){
-        Serial.println("TEMP IS NORMAL!");
+        cout << "TEMP IS NORMAL!" << endl;
     }
 
     if(elev->get_capacity() > elev->get_max_load_weight()){
-        Serial.println("CURRENT CAPACITY IS " + String(elev->get_current_temp()) + "! MUST LOWER BY: " + String(elev->get_capacity()-elev->get_max_load_weight()) + " POUNDS!");
+        cout << "CURRENT CAPACITY IS " + to_string(elev->get_current_temp()) + "! MUST LOWER BY: " + to_string(elev->get_capacity()-elev->get_max_load_weight()) + " POUNDS!" << endl;
     }
 
     else if(elev->get_capacity() <= elev->get_max_load_weight()){
-        Serial.println("CAPACITY IS NORMAL!");
+        cout << "CAPACITY IS NORMAL!" << endl;
     }
     
 }
 
 
-void EmergencyState::isWorking(){
-    if(run) {Serial.println("ELEVATOR " + String(elev->get_number()) + " HAS STABILIZED! OPERATIONS RESUMING!");}
+void EmergencyState::isWorking(void){
+    if(run) {cout << "ELEVATOR " + to_string(elev->get_number()) + " HAS STABILIZED! OPERATIONS RESUMING!" << endl;}
 
     else{
         showWarning();
     }
 }
 
-bool EmergencyState::canRun(){
+bool EmergencyState::canRun(void){
     return run;
 }
 
 void EmergencyState::setRun(bool set){
     run = set;
 }
-
 
 

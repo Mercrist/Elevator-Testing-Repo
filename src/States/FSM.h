@@ -6,6 +6,7 @@
 #pragma once
 #include "AllStates.h"
 #include "time.h"
+#include "src/lib/Elevator.h"
 
 class FSM {
     private:
@@ -17,7 +18,7 @@ class FSM {
         MaintenanceState* maintenance_state;
 
         Elevator* elev;
-        String currentStateName = ""; //keeps track of the current state
+        string currentStateName = ""; //keeps track of the current state
 
         clock_t begin;
         double time_spent;
@@ -27,7 +28,8 @@ class FSM {
     public:
         FSM(Elevator* elevator); //initialize elevators
         void setup(void); //put elevs in initial state
-        void run(uint8_t command); //run each elevator
+        void run(int command); //run each elevator
         void energyUpdate();
         ~FSM(); //end FSM
 };
+

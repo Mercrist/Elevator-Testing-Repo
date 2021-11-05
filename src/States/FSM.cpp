@@ -3,11 +3,11 @@
 FSM::FSM(Elevator* elevator)
 {
     this->elev = elevator;
-    InitialState* initial_state = new InitialState(elev); 
-    IdleState* idle_state = new IdleState(elev);
-    MovingState* moving_state = new MovingState(elev);
-    EmergencyState* emergency_state = new EmergencyState(elev); 
-    MaintenanceState* maintenance_state = new MaintenanceState(elev);
+    initial_state = new InitialState(elev); 
+    idle_state = new IdleState(elev);
+    moving_state = new MovingState(elev);
+    emergency_state = new EmergencyState(elev); 
+    maintenance_state = new MaintenanceState(elev);
 }
 
 void FSM::setup(void)
@@ -18,7 +18,7 @@ void FSM::setup(void)
 }
  
 //should go inside some mainloop
-void FSM::energyUpdate(void) //WON'T BE TESTED FOR NOW
+void FSM::energyUpdate(void)
 {
     if(currentStateName.compareTo("Idle") == 0 && !toggle){ 
         begin = clock();
@@ -32,11 +32,11 @@ void FSM::energyUpdate(void) //WON'T BE TESTED FOR NOW
     }
 }
 
-void FSM::run(uint8_t command) //manages transitions
+void FSM::run(int command) //manages transitions
 {
     //if you havent set a state or you're in maintenanace and haven't input the command to unlock maintenance
     if(currentStateName.compareTo("") == 0 || (currentStateName.compareTo("Maintenance") == 0 && command != 13)){ //cant run
-        Serial.print("CAN'T RUN ELEVATOR #" + String(elev->get_number()) + "! PLEASE FIX ISSUES");
+        cout << "CAN'T RUN ELEVATOR #" + to_string(elev->get_number()) + "! PLEASE FIX ISSUES" << endl;
         command = 10; //set to maintenance state
     }
 
@@ -65,7 +65,7 @@ void FSM::run(uint8_t command) //manages transitions
 
             }
 
-            else {Serial.print("Inacessible from the current state: " + currentStateName);}
+            else {cout << "Inacessible from the current state: " + currentStateName << endl;}
             currentStateName = idle_state->currentState();
             toggle = false;
             break;
@@ -77,7 +77,7 @@ void FSM::run(uint8_t command) //manages transitions
                 toggle = true; //wont go into reset, means elevator was activated
             }
 
-            else {Serial.print("Inacessible from the current state: " + currentStateName);}
+            else {cout << "Inacessible from the current state: " + currentStateName << endl;}
             currentStateName = idle_state->currentState();
             toggle = false;
             break;
@@ -124,7 +124,7 @@ void FSM::run(uint8_t command) //manages transitions
     }
 }
 
-FSM::~FSM()
+FSM::~FSM(void)
 {
     delete elev;
     delete initial_state;

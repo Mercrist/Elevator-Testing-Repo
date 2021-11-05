@@ -1,10 +1,15 @@
 /*
- * TODO : DOCUMENT
+
  * 
  * 
  */
+
 #pragma once
 #include "Set.h"
+using namespace std;
+#include <iostream>
+#include <string>
+
 
 class FSM; //forward declaration
 
@@ -17,52 +22,50 @@ class Elevator
 {
 
 private:
-        uint8_t eid; 
-        uint8_t door_status;
-        uint8_t light_status; 
-        uint8_t floor;
-        uint8_t max_floor;
-        uint8_t current_temp;
-        uint8_t max_temp;
-        uint8_t capacity; 
-        uint16_t load_weight; 
-        uint16_t max_load_weight; //in lbs
+        int eid; 
+        int door_status;
+        int light_status; 
+        int floor;
+        int max_floor;
+        int current_temp;
+        int max_temp;
+        int capacity; 
+        int load_weight; 
+        int max_load_weight; //in lbs
         // State* elevator_state;
+        FSM* state_machine;
         Set* stoppingFloors;
 
 public:
 
         // Constructors
-        Elevator(uint8_t num);
+        Elevator(int num);
 
         //booleans
-        uint8_t is_door_status(void);
+        int is_door_status(void);
 
-        uint8_t is_light_status(void);
+        int is_light_status(void);
 
         //setters
-        void set_door_status(uint8_t inputDoorST);
+        void set_door_status(int inputDoorST);
 
-        void set_load_weight(uint16_t inputLoad); //increases load weight
+        void set_load_weight(int inputLoad); //increases load weight
 
-        void set_floor(uint8_t inputFloor);
+        void set_floor(int inputFloor);
 
-        void set_light_status(uint8_t inputLight);
+        void set_light_status(int inputLight);
 
-        void set_max_temp(uint8_t inputTemp);
+        void set_max_temp(int inputTemp);
 
-        void set_current_temp(uint8_t inputTemp);
+        void set_current_temp(int inputTemp);
 
-        void set_max_load_weight(uint16_t inputLoad);
+        void set_max_load_weight(int inputLoad);
     
-        void set_max_floor(uint8_t inputFloor);
+        void set_max_floor(int inputFloor);
 
         // void set_state(State* nexState);
 
-        void set_number(uint8_t num);
-
-        void set_stopping_floors(Set* floors);
-
+        void set_number(int num);
 
         //getters
 

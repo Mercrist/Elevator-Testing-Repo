@@ -5,13 +5,13 @@ Set::Set()
     head = NULL;
 }
 
-Set::Set(uint8_t elem)
+Set::Set(int elem)
 {
     head = new Node(elem);
     currSize++;
 }
 
-void Set::add(uint8_t elem)
+void Set::add(int elem)
 {
 
     if(head == NULL){
@@ -38,7 +38,7 @@ void Set::add(uint8_t elem)
     currSize++;
 }
 
-bool Set::contains(uint8_t elem)
+bool Set::contains(int elem)
 {
 
     if(head == NULL){
@@ -59,7 +59,7 @@ bool Set::contains(uint8_t elem)
     }
 }
 
-bool Set::remove(uint8_t elem){
+bool Set::remove(int elem){
     Node* toDelete;
      if(head == NULL){
         return false;
@@ -97,7 +97,7 @@ bool Set::remove(uint8_t elem){
     return false;
 }
 
-uint8_t Set::get(int index)
+int Set::get(int index)
 {
     if(size() < 1 || index >= size()) return -1;
 

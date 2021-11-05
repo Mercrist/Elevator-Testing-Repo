@@ -4,19 +4,20 @@
 class EmergencyState : public State {
 
     private:
-        String stateName = "Emergency";
+        string stateName = "Emergency";
         bool run = false;
         Elevator* elev;
 
     public:
         EmergencyState(Elevator* elevator);
-        void start();
-        bool canRun(); 
+        void start(void);
+        bool canRun(void); 
         void setRun(bool set);
 
-        void showWarning(); //show a warning every time a user tries to us an elevator in emergency state
-        void isWorking(); //show a warning every time a user tries to us an elevator in emergency state
-        void unload(uint16_t weight);
+        void showWarning(void); //show a warning every time a user tries to us an elevator in emergency state
+        void isWorking(void); //show a warning every time a user tries to us an elevator in emergency state
+        void unload(int weight);
 
-        String currentState(){return this->stateName;}
+        string currentState(){return this->stateName;}
+        ~EmergencyState(){};
 };

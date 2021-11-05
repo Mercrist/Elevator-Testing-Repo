@@ -3,19 +3,20 @@
 
 class IdleState : public State{
     private:
-        String stateName = "Idle";
+        string stateName = "Idle";
         bool run = true;
         Elevator* elev;
 
     public:
         IdleState(Elevator* elevator);
-        void start();
-        bool canRun(); 
+        void start(void);
+        bool canRun(void); 
         void setRun(bool set);
         
-        void load(uint16_t weight);
-        void unload(uint16_t weight);
+        void load(int weight);
+        void unload(int weight);
         void energySaving();
-        String currentState(){return this->stateName;}
+        string currentState(){return this->stateName;}
+        ~IdleState(){};
 
 };

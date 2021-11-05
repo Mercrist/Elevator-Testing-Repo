@@ -4,14 +4,15 @@
 class InitialState : public State {
 
     private:
-        String stateName = "Initial";
+        string stateName = "Initial";
         bool run = true;
         Elevator* elev;
 
     public:
         InitialState(Elevator* elevator);
-        void start();
-        bool canRun(); 
+        void start(void);
+        bool canRun(void); 
         void setRun(bool set);
-        String currentState(){return this->stateName;}
+        string currentState(){return this->stateName;}
+        ~InitialState(){};
 };

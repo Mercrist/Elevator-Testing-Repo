@@ -1,7 +1,7 @@
 #include "Elevator.h"
 
 //Constructor
-Elevator::Elevator(uint8_t num)
+Elevator::Elevator(int num)
 {
     eid = num;
     max_load_weight = ELEVATOR_MAX_WEIGHT;
@@ -10,53 +10,53 @@ Elevator::Elevator(uint8_t num)
 }
 
 //booleans
-uint8_t Elevator::is_door_status(void)
+int Elevator::is_door_status(void)
 {
     return door_status;
 }
 
-uint8_t Elevator::is_light_status(void)
+int Elevator::is_light_status(void)
 {
     return light_status;
 }
 
 //setters
-void Elevator::set_door_status(uint8_t inputDoorST)
+void Elevator::set_door_status(int inputDoorST)
 {
     this->door_status = inputDoorST;
 }
 
-void Elevator::set_load_weight(uint16_t inputLoad)
+void Elevator::set_load_weight(int inputLoad)
 {
     this->load_weight = inputLoad; //change based on data structure
 }
 
-void Elevator::set_floor(uint8_t inputFloor)
+void Elevator::set_floor(int inputFloor)
 {
     this->floor = inputFloor;
 }
 
-void Elevator::set_light_status(uint8_t inputLight)
+void Elevator::set_light_status(int inputLight)
 {
     this->light_status = inputLight;
 }
 
-void Elevator::set_max_temp(uint8_t inputTemp)
+void Elevator::set_max_temp(int inputTemp)
 {
     this->max_temp = inputTemp;
 }
 
-void Elevator::set_current_temp(uint8_t inputTemp)
+void Elevator::set_current_temp(int inputTemp)
 {
     this->current_temp = inputTemp;
 }
 
-void Elevator::set_max_load_weight(uint16_t inputLoad)
+void Elevator::set_max_load_weight(int inputLoad)
 {
     this->max_load_weight = inputLoad;
 }
 
-void Elevator::set_max_floor(uint8_t inputFloor)
+void Elevator::set_max_floor(int inputFloor)
 {
     this->max_floor = inputFloor;
 }
@@ -66,16 +66,10 @@ void Elevator::set_max_floor(uint8_t inputFloor)
 //     this->elevator_state = nextState;
 // }
 
-void Elevator::set_number(uint8_t num)
+void Elevator::set_number(int num)
 {
     eid = num;         
 }
-
-void set_stopping_floors(Set* floors)
-{
-    stoppingFloors = floors;
-}
-
 
 //getters
 
