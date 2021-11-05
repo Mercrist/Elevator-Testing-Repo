@@ -6,12 +6,6 @@
 
 #pragma once
 #include "Set.h"
-using namespace std;
-#include <iostream>
-#include <string>
-
-
-class FSM; //forward declaration
 
 // Elevator parameters
 #define ELEVATOR_MAX_TEMP   120   // Maximum temperature an elevator car can reach
@@ -33,7 +27,6 @@ private:
         int load_weight; 
         int max_load_weight; //in lbs
         // State* elevator_state;
-        FSM* state_machine;
         Set* stoppingFloors;
 
 public:
@@ -66,6 +59,8 @@ public:
         // void set_state(State* nexState);
 
         void set_number(int num);
+
+        void set_stopping_floors(Set* floors);
 
         //getters
 

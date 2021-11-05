@@ -20,7 +20,7 @@ void FSM::setup(void)
 //should go inside some mainloop
 void FSM::energyUpdate(void)
 {
-    if(currentStateName.compareTo("Idle") == 0 && !toggle){ 
+    if(currentStateName.compare("Idle") == 0 && !toggle){ 
         begin = clock();
         time_spent = (double)(clock() - begin);
 
@@ -35,14 +35,14 @@ void FSM::energyUpdate(void)
 void FSM::run(int command) //manages transitions
 {
     //if you havent set a state or you're in maintenanace and haven't input the command to unlock maintenance
-    if(currentStateName.compareTo("") == 0 || (currentStateName.compareTo("Maintenance") == 0 && command != 13)){ //cant run
+    if(currentStateName.compare("") == 0 || (currentStateName.compare("Maintenance") == 0 && command != 13)){ //cant run
         cout << "CAN'T RUN ELEVATOR #" + to_string(elev->get_number()) + "! PLEASE FIX ISSUES" << endl;
         command = 10; //set to maintenance state
     }
 
     switch(command){
         case 7: //load people (300 lbs)
-            if(currentStateName.compareTo("Idle") == 0){
+            if(currentStateName.compare("Idle") == 0){
                 idle_state->start();
                 idle_state->load(300);
                 toggle = true; //wont go into reset, means elevator was activated, reset timer
@@ -71,7 +71,7 @@ void FSM::run(int command) //manages transitions
             break;
 
         case 8: //unload people (300 lbs)
-            if(currentStateName.compareTo("Idle") == 0){
+            if(currentStateName.compare("Idle") == 0){
                 idle_state->start();
                 idle_state->unload(300);
                 toggle = true; //wont go into reset, means elevator was activated
@@ -83,7 +83,7 @@ void FSM::run(int command) //manages transitions
             break;
 
         case 9: //moving
-            if(currentStateName.compareTo("Idle") == 0){
+            if(currentStateName.compare("Idle") == 0){
                 currentStateName = moving_state->currentState();
                 moving_state->start();
                 moving_state->set_direction(); //direction lock

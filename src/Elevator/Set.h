@@ -1,6 +1,6 @@
 #pragma once
-using namespace std;
 #include <iostream>
+using namespace std;
 
 
 //TESTED WITH INTS, WORKS

@@ -1,7 +1,10 @@
 #pragma once
-#include "Arduino.h"
-#include "Elevator.h"
-
+#include <iostream>
+#include <string>
+#include <cmath>
+#include "time.h"
+#include "Elevator/Elevator.h"
+using namespace std;
 
 class State{
 

@@ -29,7 +29,7 @@ int MovingState::get_nearest_floor()
     {
         int currentStopping = stoppingFloors->get(i);
         if(abs(currentStopping - elev->get_floor()) <= nearestDifference && currentStopping != elev->get_floor()){
-            nearestDifference = abs(currentStopping - elev->get_floor(void));
+            nearestDifference = abs(currentStopping - elev->get_floor());
             go_to_floor = currentStopping;
         }
     }
@@ -119,7 +119,7 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
         //DONT USE DELAY
         moving_timer();
         elev->set_floor(currentFloor); 
-        cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR # " + to_string(toFloor) + "!" endl;
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR # " + to_string(toFloor) + "!" << endl;
 
         if(stoppingFloors->contains(currentFloor)){
             cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY LEAVING AND PICKING PEOPLE ON FLOOR #" + to_string(toFloor) + "!" << endl;

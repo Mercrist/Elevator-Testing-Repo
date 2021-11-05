@@ -25,8 +25,8 @@ void MaintenanceState::isWorking(void){
     }
 }
 
-void MaintenanceState::check(String input){
-    if(command.compareTo(input) == 0){
+void MaintenanceState::check(string input){
+    if(command.compare(input) == 0){
         setRun(true);
         isWorking();
     }
