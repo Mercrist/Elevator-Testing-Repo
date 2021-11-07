@@ -29,6 +29,7 @@ class FSM {
         void setup(void); //put elevs in initial state
         void run(int command); //run each elevator
         void energyUpdate();
+        void warning();
         ~FSM(); //end FSM
 };
 

@@ -9,7 +9,7 @@ IdleState::IdleState(Elevator* elevator){
 void IdleState::start(void){
     elev->set_door_status(true);
     elev->set_light_status(true);
-    cout << "ENTERING IDLE STATE!" << endl;
+    cout << "ELEVATOR #" + to_string(elev->get_number()) + " ENTERING IDLE STATE!" << endl;
 
 }
 

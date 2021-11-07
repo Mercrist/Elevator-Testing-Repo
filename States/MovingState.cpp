@@ -77,8 +77,9 @@ void MovingState::moving_timer(void)
 
     cout << "ELEVATOR #" + to_string(elev->get_number()) + " TRANSITIONING TO ANOTHER FLOOR!"<< endl;
 
-    while(time_spent != 3000.0){ //3 second timer
+    while(true){ //2 second timer
         time_spent = (double)(clock() - begin);
+        if(time_spent >= 2000.00) return;
     }
 }
 
@@ -88,7 +89,7 @@ void MovingState::move_nearest(void) //moves to the nearest floor in the buildin
     
     //will be called after emergency state so we don't care about whether we can run it or not
     
-    if(currentFloor + 1 != elev->get_max_floor()){ //direction lock
+    if(currentFloor != elev->get_max_floor()){ //direction to move
         currentFloor++;
     }
 
@@ -98,7 +99,7 @@ void MovingState::move_nearest(void) //moves to the nearest floor in the buildin
         
     moving_timer();
     elev->set_floor(currentFloor); 
-    cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR #" + to_string(toFloor) + "!" << endl;
+    cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR #" + to_string(elev->get_floor()) + "!" << endl;
     
 }
 

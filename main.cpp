@@ -15,8 +15,8 @@ int main()
 
     FSM* machine = new FSM(elev);
     machine->setup();
-    machine->run(7); //CHANGE TO WHATEVER COMMAND PARAMETERS YOU WANT
+    machine->run(7);
+    
     delete machine;
-
     return 0; //DON'T REMOVE
 }

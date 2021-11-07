@@ -7,6 +7,7 @@ Elevator::Elevator(int num)
     max_load_weight = ELEVATOR_MAX_WEIGHT;
     max_temp = ELEVATOR_MAX_TEMP;
     capacity = ELEVATOR_CAPACITY;
+    floor = 1;
 }
 
 //booleans
@@ -28,7 +29,7 @@ void Elevator::set_door_status(int inputDoorST)
 
 void Elevator::set_load_weight(int inputLoad)
 {
-    this->load_weight = inputLoad; //change based on data structure
+    this->load_weight = inputLoad; 
 }
 
 void Elevator::set_floor(int inputFloor)

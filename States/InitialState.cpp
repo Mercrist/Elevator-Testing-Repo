@@ -11,7 +11,7 @@ void InitialState::start(void)
     elev->set_light_status(true);
     elev->set_floor(1);
     elev->set_current_temp(60);
-    cout << "ELEVATOR " + to_string(elev->get_number()) + " INITIALIZED!" << endl;
+    cout << "ELEVATOR #" + to_string(elev->get_number()) + " INITIALIZED!" << endl;
 }
 
 bool InitialState::canRun(void){
