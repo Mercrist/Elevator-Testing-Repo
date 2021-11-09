@@ -21,7 +21,7 @@ int MovingState::get_nearest_floor()
 
     if(stoppingFloors->size() == 1) return stoppingFloors->get(0); 
 
-    int nearestDifference = 40; 
+    int nearestDifference = 1000; 
     int go_to_floor;
     
     for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor 
@@ -39,7 +39,6 @@ int MovingState::get_nearest_floor()
 void MovingState::set_direction(void)
 {
     int floor = get_nearest_floor();
-    int toFloor;
 
     if(floor == -1){
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " HAS NO REQUESTED FLOORS!" << endl;
@@ -49,17 +48,15 @@ void MovingState::set_direction(void)
 
 
     if(floor <= elev->get_max_floor()){ 
-        toFloor = floor;
-
-        if(elev->get_floor() < toFloor){ //direction lock
+        if(elev->get_floor() < floor){ //direction lock
             direction_lock = UP;
         }
 
-        else if (elev->get_floor() > toFloor){
+        else if (elev->get_floor() > floor){
             direction_lock = DOWN;
         }
 
-        cout << "ELEVATOR #" + to_string(elev->get_number()) + " EN ROUTE TO FLOOR #" + to_string(toFloor) + "!" << endl;
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " EN ROUTE TO FLOOR #" + to_string(floor) + "!" << endl;
         run = true;
     }
 
@@ -124,7 +121,6 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR #" + to_string(currentFloor) + "!" << endl;
 
         if(stoppingFloors->contains(currentFloor)){
-            cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY LEAVING AND PICKING PEOPLE ON FLOOR #" + to_string(currentFloor) + "!" << endl;
             stoppingFloors->remove(currentFloor);
             stopped = true;
             open();

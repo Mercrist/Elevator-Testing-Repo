@@ -104,7 +104,7 @@ int Set::get(int index)
     if(index == 0) return head->getValue();
     Node* current = head;
 
-    for(int i = 1; i < index; i++){
+    for(int i = 0; i < index; i++){
         current = current->getNext();
     }
     

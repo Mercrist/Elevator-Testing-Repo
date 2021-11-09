@@ -4,12 +4,12 @@ int main()
 {
     Elevator* elev = new Elevator(1);
     //SET ELEVATOR PARAMETERS WITH SETTERS HERE
-    elev->set_max_floor(7);
+    elev->set_max_floor(8);
     //query of floors to visit
     Set* floors = new Set(2);
     floors->add(4);
     floors->add(5);
-    floors->add(7);
+    floors->add(8);
     floors->add(1);
 
     elev->set_stopping_floors(floors);

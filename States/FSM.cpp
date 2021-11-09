@@ -88,15 +88,14 @@ void FSM::run(int command) //manages transitions
                 
                 int count = 1;
                 while(moving_state->canMove()){
-                    if(count == 2){ //FOR TESTING PURPOSES
-                        elev->get_stopping_floors()->add(2);
+                    if(count == 4){ //FOR TESTING PURPOSES
+                        elev->get_stopping_floors()->add(4);
                     }
 
-
-
-                    moving_state->move();
                     count++;
+                    moving_state->move();
                     elev->get_stopping_floors()->print();
+                    cout << "\n";
                     //loading and unloading
                     if(moving_state->made_stop()){
                         idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
