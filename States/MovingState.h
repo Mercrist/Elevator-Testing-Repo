@@ -29,10 +29,7 @@ class MovingState : public State{
         bool canMove(void);
         bool should_switch_direction(void);
         bool made_stop(void);
-        void open(void);
-        void close(void);
-
-
+        
         string currentState(){return this->stateName;}
         ~MovingState(){};
 

@@ -100,7 +100,7 @@ void FSM::run(int command) //manages transitions
                     if(moving_state->made_stop()){
                         idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
                         idle_state->unload(300);
-                        moving_state->close();
+                        elev->close();
 
                         if(elev->get_load_weight() > elev->get_max_load_weight()){command = 7;} //emergency state, just call the function directly after you refactor
                     }

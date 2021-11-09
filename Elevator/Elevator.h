@@ -82,6 +82,9 @@ public:
 
         Set* get_stopping_floors(void){return stoppingFloors;}
 
+        void open(void);
+        void close(void);
+
         // String get_state_name(void);
 
         // State* get_state(void);

@@ -123,7 +123,7 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
         if(stoppingFloors->contains(currentFloor)){
             stoppingFloors->remove(currentFloor);
             stopped = true;
-            open();
+            elev->open();
         }
         else stopped = false;
     }
@@ -158,15 +158,6 @@ bool MovingState::made_stop(void){
     return stopped;
 }
 
-void MovingState::open(void)
-{
-    elev->set_door_status(true);
-}
-
-void MovingState::close()
-{
-    elev->set_door_status(false);
-}
 
 bool MovingState::canRun(void){
     return run;

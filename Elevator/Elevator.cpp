@@ -136,6 +136,16 @@ uint8_t Elevator::get_max_temp(void)
 //     elevator_state->start(this);
 // }
 
+void Elevator::open(void)
+{
+    set_door_status(true);
+}
+
+void Elevator::close()
+{
+    set_door_status(false);
+}
+
 Elevator::~Elevator()
 {
     stoppingFloors->clear();
