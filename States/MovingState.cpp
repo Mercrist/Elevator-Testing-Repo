@@ -16,8 +16,7 @@ int MovingState::get_nearest_floor()
     Set* stoppingFloors = elev->get_stopping_floors();
 
     if(stoppingFloors->size() < 1){
-        cout << "ELEV #" + to_string(elev->get_number()) + " CAN'T CHANGE FLOORS!" << endl;
-        return -1; //SWITCH TO IDLE
+        return -1; //SWITCH TO IDLE, goes to set_direction
     }
 
     if(stoppingFloors->size() == 1) return stoppingFloors->get(0); 
@@ -28,6 +27,7 @@ int MovingState::get_nearest_floor()
     for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor 
     {
         int currentStopping = stoppingFloors->get(i);
+
         if(abs(currentStopping - elev->get_floor()) <= nearestDifference && currentStopping != elev->get_floor()){
             nearestDifference = abs(currentStopping - elev->get_floor());
             go_to_floor = currentStopping;
@@ -38,7 +38,8 @@ int MovingState::get_nearest_floor()
 
 void MovingState::set_direction(void)
 {
-    uint8_t floor = get_nearest_floor();
+    int floor = get_nearest_floor();
+    int toFloor;
 
     if(floor == -1){
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " HAS NO REQUESTED FLOORS!" << endl;
@@ -48,17 +49,17 @@ void MovingState::set_direction(void)
 
 
     if(floor <= elev->get_max_floor()){ 
-        this->toFloor = floor;
+        toFloor = floor;
 
-        if(elev->get_floor() < this->toFloor){ //direction lock
+        if(elev->get_floor() < toFloor){ //direction lock
             direction_lock = UP;
         }
 
-        else if (elev->get_floor() > this->toFloor){
+        else if (elev->get_floor() > toFloor){
             direction_lock = DOWN;
         }
 
-        cout << "ELEVATOR " + to_string(elev->get_number()) + " EN ROUTE TO FLOOR# " + to_string(toFloor) + "!" << endl;
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " EN ROUTE TO FLOOR #" + to_string(toFloor) + "!" << endl;
         run = true;
     }
 
@@ -120,20 +121,20 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
         //DONT USE DELAY
         moving_timer();
         elev->set_floor(currentFloor); 
-        cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR # " + to_string(toFloor) + "!" << endl;
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR #" + to_string(currentFloor) + "!" << endl;
 
         if(stoppingFloors->contains(currentFloor)){
-            cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY LEAVING AND PICKING PEOPLE ON FLOOR #" + to_string(toFloor) + "!" << endl;
+            cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY LEAVING AND PICKING PEOPLE ON FLOOR #" + to_string(currentFloor) + "!" << endl;
             stoppingFloors->remove(currentFloor);
             stopped = true;
+            open();
         }
         else stopped = false;
     }
 }
 
 bool MovingState::canMove(void){
-    Set* stoppingFloors = elev->get_stopping_floors();
-    return stoppingFloors->size() > 0;
+    return elev->get_stopping_floors()->size() != 0;
 }
 
 bool MovingState::should_switch_direction(void) //whether we should change direction lock
@@ -144,6 +145,7 @@ bool MovingState::should_switch_direction(void) //whether we should change direc
     for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor 
     {
         int otherFloors = stoppingFloors->get(i);
+
         if(direction_lock == UP && otherFloors > elev->get_floor()){ //more floors up
             shouldChange = false;            
         }
@@ -158,6 +160,16 @@ bool MovingState::should_switch_direction(void) //whether we should change direc
 
 bool MovingState::made_stop(void){
     return stopped;
+}
+
+void MovingState::open(void)
+{
+    elev->set_door_status(true);
+}
+
+void MovingState::close()
+{
+    elev->set_door_status(false);
 }
 
 bool MovingState::canRun(void){

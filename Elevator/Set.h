@@ -49,4 +49,5 @@ class Set{ //singly linked
         bool remove(int elem);
         void clear(); 
         int size(){return currSize;} 
+        void print();
 };

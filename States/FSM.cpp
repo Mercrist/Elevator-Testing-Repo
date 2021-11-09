@@ -43,7 +43,7 @@ void FSM::run(int command) //manages transitions
         case 7: //load people (300 lbs)
             if(currentStateName.compare("Idle") == 0){
                 idle_state->start();
-                idle_state->load(13000);
+                idle_state->load(300);
                 toggle = true; //wont go into reset, means elevator was activated, reset timer
 
                 if(elev->get_load_weight() > elev->get_max_load_weight() || elev->get_current_temp() > elev->get_max_temp()){ //EMERGENCY STATE
@@ -86,15 +86,24 @@ void FSM::run(int command) //manages transitions
                 moving_state->start();
                 moving_state->set_direction(); //direction lock
                 
+                int count = 1;
                 while(moving_state->canMove()){
+                    if(count == 2){ //FOR TESTING PURPOSES
+                        elev->get_stopping_floors()->add(2);
+                    }
+
+
+
                     moving_state->move();
+                    count++;
+                    elev->get_stopping_floors()->print();
                     //loading and unloading
                     if(moving_state->made_stop()){
-                        idle_state->start();
                         idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
                         idle_state->unload(300);
+                        moving_state->close();
 
-                        if(elev->get_load_weight() > elev->get_max_load_weight()){command = 7;} //emergency state
+                        if(elev->get_load_weight() > elev->get_max_load_weight()){command = 7;} //emergency state, just call the function directly after you refactor
                     }
 
                     if(moving_state->should_switch_direction()){ //switch direction lock 

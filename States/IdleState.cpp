@@ -14,17 +14,32 @@ void IdleState::start(void){
 }
 
 void IdleState::load(int weight){
-    int toAdd = elev->get_load_weight() + weight;
-    elev->set_load_weight(toAdd);
+    if(elev->is_door_open() && elev->is_light_on()){
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " LOADING PEOPLE ON THE ELEVATOR!" << endl;
+        int toAdd = elev->get_load_weight() + weight;
+        elev->set_load_weight(toAdd);
+    }
+    else{
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " IS CLOSED OR INACTIVE!" << endl;
+    }
 }
 
 void IdleState::unload(int weight){
     if(weight > elev->get_max_load_weight()){ //goes into negative numbers
-        cout << "Can't unload more weight than is currently present!" << endl;
+        cout << "CAN'T UNLOAD MORE WEIGHT THAN IS CURRENTLY PRESENT!" << endl;
         return;
     }
-    int toUnload = elev->get_load_weight() - weight;
-    elev->set_load_weight(toUnload);
+
+    if(elev->is_door_open() && elev->is_light_on()){
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " UNLOADING PEOPLE OFF THE ELEVATOR!" << endl;
+        int toUnload = elev->get_load_weight() - weight;
+        elev->set_load_weight(toUnload);
+    }
+
+    else{
+        cout << "ELEVATOR #" + to_string(elev->get_number()) + " IS CLOSED OR INACTIVE!" << endl;
+    }
+    
 }
 
 void IdleState::energySaving(void){

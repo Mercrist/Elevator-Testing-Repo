@@ -17,8 +17,8 @@ class Elevator
 
 private:
         int eid; 
-        int door_status;
-        int light_status; 
+        bool door_status;
+        bool light_status; 
         int floor;
         int max_floor;
         int current_temp;
@@ -35,18 +35,18 @@ public:
         Elevator(int num);
 
         //booleans
-        int is_door_status(void);
+        bool is_door_open(void);
 
-        int is_light_status(void);
+        bool is_light_on(void);
 
         //setters
-        void set_door_status(int inputDoorST);
+        void set_door_status(bool inputDoorST);
 
         void set_load_weight(int inputLoad); //increases load weight
 
         void set_floor(int inputFloor);
 
-        void set_light_status(int inputLight);
+        void set_light_status(bool inputLight);
 
         void set_max_temp(int inputTemp);
 
@@ -87,4 +87,6 @@ public:
         // State* get_state(void);
 
         // void run_state(void); //run the current state
+        
+        ~Elevator();
 };

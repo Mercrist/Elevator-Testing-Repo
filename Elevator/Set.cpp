@@ -117,3 +117,15 @@ void Set::clear()
         remove(head->getValue());
     }
 }
+
+void Set::print()
+{
+    Node* current = head;
+    int index = 0;
+
+    while(current != NULL){
+        cout << "Index: " + to_string(index) + " with value: " + to_string(current->getValue()) << endl;
+        index++;
+        current = current->getNext();    
+    }
+}

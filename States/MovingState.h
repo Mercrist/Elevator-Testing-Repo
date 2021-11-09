@@ -10,7 +10,6 @@ class MovingState : public State{
         string stateName = "Moving";
         bool run = false;
         int direction_lock = null; //up is 1, down is 0
-        int toFloor;
         Elevator* elev;
         bool stopped = false;
 
@@ -30,6 +29,9 @@ class MovingState : public State{
         bool canMove(void);
         bool should_switch_direction(void);
         bool made_stop(void);
+        void open(void);
+        void close(void);
+
 
         string currentState(){return this->stateName;}
         ~MovingState(){};

@@ -11,18 +11,18 @@ Elevator::Elevator(int num)
 }
 
 //booleans
-int Elevator::is_door_status(void)
+bool Elevator::is_door_open(void)
 {
     return door_status;
 }
 
-int Elevator::is_light_status(void)
+bool Elevator::is_light_on(void)
 {
     return light_status;
 }
 
 //setters
-void Elevator::set_door_status(int inputDoorST)
+void Elevator::set_door_status(bool inputDoorST)
 {
     this->door_status = inputDoorST;
 }
@@ -37,7 +37,7 @@ void Elevator::set_floor(int inputFloor)
     this->floor = inputFloor;
 }
 
-void Elevator::set_light_status(int inputLight)
+void Elevator::set_light_status(bool inputLight)
 {
     this->light_status = inputLight;
 }
@@ -135,3 +135,9 @@ uint8_t Elevator::get_max_temp(void)
 // {
 //     elevator_state->start(this);
 // }
+
+Elevator::~Elevator()
+{
+    stoppingFloors->clear();
+    delete stoppingFloors;
+}
