@@ -79,6 +79,10 @@ void FSM::movingLoop()
             moving_state->set_direction();
         }
     }
+
+    idle_state->start();
+    curr_state = IDLE_STATE;
+    toggle = false;
 }
 
 void FSM::warning()
@@ -149,9 +153,7 @@ void FSM::run(int command) //manages transitions
             if(curr_state ==  IDLE_STATE){
                 curr_state = MOVING_STATE;
                 movingLoop();
-                idle_state->start();
-                curr_state = IDLE_STATE;
-                toggle = false;
+                
             }
             else warning();
             break;

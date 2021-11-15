@@ -34,6 +34,11 @@ class Set{ //singly linked
                     data = elem;
                     next = nextNode;
                 };
+
+                ~Node(){
+                    next = NULL;
+                    data = NULL;
+                }
         };
 
         Node* head;
