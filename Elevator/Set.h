@@ -42,7 +42,8 @@ class Set{ //singly linked
     public:
         Set();
         Set(int elem);
-
+        ~Set();
+        
         void add(int elem);
         int get(int index);
         bool contains(int elem);

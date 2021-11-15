@@ -76,7 +76,7 @@ bool Set::remove(int elem){
         toDelete = head;
         head = head->getNext();
         currSize--;
-        delete toDelete; //c++ has no garbage collector
+        delete toDelete; 
         return true;
     }
 
@@ -128,4 +128,10 @@ void Set::print()
         index++;
         current = current->getNext();    
     }
+}
+
+Set::~Set()
+{
+    clear();
+    delete head;
 }

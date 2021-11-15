@@ -148,6 +148,5 @@ void Elevator::close()
 
 Elevator::~Elevator()
 {
-    stoppingFloors->clear();
     delete stoppingFloors;
 }

@@ -13,13 +13,13 @@ FSM::FSM(Elevator* elevator)
 void FSM::setup(void) //dont initialize idle start here
 {
     initial_state->start(); 
-    currentStateName = idle_state->currentState();
+    curr_state = IDLE_STATE;
 }
  
 //should go inside some mainloop
 void FSM::energyUpdate(void)
 {
-    if(currentStateName.compare("Idle") == 0 && !toggle){ 
+    if(curr_state == IDLE_STATE){ 
         begin = clock();
         time_spent = (double)(clock() - begin);
 
@@ -32,33 +32,98 @@ void FSM::energyUpdate(void)
     }
 }
 
+void FSM::emergencyToggle()
+{
+    emergency_state->start();
+    curr_state = EMERGENCY_STATE;
+
+    moving_state->start();
+    moving_state->move_nearest();
+    emergency_state->unload(elev->get_load_weight()); //empty elevator
+    elev->set_current_temp(65);
+    emergency_state->isWorking();
+
+    idle_state->start();
+    curr_state = IDLE_STATE;
+    toggle = false;
+}
+
+void FSM::movingLoop()
+{
+    moving_state->start();
+    moving_state->set_direction(); //direction lock
+                
+    int count = 1;
+    while(moving_state->canMove()){
+        if(count == 4){ //FOR TESTING PURPOSES
+            elev->get_stopping_floors()->add(4);
+        }
+
+        count++;
+        moving_state->move();
+        elev->get_stopping_floors()->print();
+        cout << "\n";
+        //loading and unloading
+        if(moving_state->made_stop()){
+            idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
+            idle_state->unload(300);
+            elev->close();
+
+            if(elev->get_load_weight() > elev->get_max_load_weight()){
+                emergencyToggle();
+                return;
+            }
+        }
+
+        if(moving_state->should_switch_direction()){ //switch direction lock 
+            moving_state->set_direction();
+        }
+    }
+}
+
 void FSM::warning()
 {
-    cout << "CAN'T RUN ELEVATOR #" + to_string(elev->get_number()) + " FROM THE CURRENT STATE: " + currentStateName << endl;
+    string state; 
+    switch(curr_state){
+        case 1:
+            state = initial_state->currentState();
+            break;
+            
+        case 2:
+            state = idle_state->currentState();
+            break;
+
+        case 3:
+            state = moving_state->currentState();
+            break; 
+
+        case 4:
+            state = emergency_state->currentState();
+            break;
+
+        case 5:
+            state = maintenance_state->currentState();
+            break;
+
+        default: 
+            state = "no set state";
+            break;
+
+    }
+    cout << "CAN'T RUN ELEVATOR #" + to_string(elev->get_number()) + " FROM THE CURRENT STATE: " + state << endl;
 }
 
 void FSM::run(int command) //manages transitions
 {
     switch(command){
         case 7: //load people (300 lbs)
-            if(currentStateName.compare("Idle") == 0){
+            if(curr_state == IDLE_STATE){
                 idle_state->start();
                 idle_state->load(300);
                 toggle = true; //wont go into reset, means elevator was activated, reset timer
 
                 if(elev->get_load_weight() > elev->get_max_load_weight() || elev->get_current_temp() > elev->get_max_temp()){ //EMERGENCY STATE
-                    emergency_state->start();
-                    currentStateName = emergency_state->currentState();
-
-                    moving_state->start();
-                    moving_state->move_nearest();
-                    emergency_state->unload(elev->get_load_weight()); //empty elevator
-                    elev->set_current_temp(65);
-                    emergency_state->isWorking();
-                    
-                    idle_state->start();
-                    currentStateName = idle_state->currentState();
-                    toggle = false;
+                    emergencyToggle();
                     break;
                 }
 
@@ -70,7 +135,7 @@ void FSM::run(int command) //manages transitions
             break;
 
         case 8: //unload people (300 lbs)
-            if(currentStateName.compare("Idle") == 0){
+            if(curr_state == IDLE_STATE){
                 idle_state->start();
                 idle_state->unload(300);
                 toggle = true; //wont go into reset, means elevator was activated
@@ -81,50 +146,25 @@ void FSM::run(int command) //manages transitions
             break;
 
         case 9: //moving
-            if(currentStateName.compare("Idle") == 0){
-                currentStateName = moving_state->currentState();
-                moving_state->start();
-                moving_state->set_direction(); //direction lock
-                
-                int count = 1;
-                while(moving_state->canMove()){
-                    if(count == 4){ //FOR TESTING PURPOSES
-                        elev->get_stopping_floors()->add(4);
-                    }
-
-                    count++;
-                    moving_state->move();
-                    elev->get_stopping_floors()->print();
-                    cout << "\n";
-                    //loading and unloading
-                    if(moving_state->made_stop()){
-                        idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
-                        idle_state->unload(300);
-                        elev->close();
-
-                        if(elev->get_load_weight() > elev->get_max_load_weight()){command = 7;} //emergency state, just call the function directly after you refactor
-                    }
-
-                    if(moving_state->should_switch_direction()){ //switch direction lock 
-                        moving_state->set_direction();
-                    }
-                }
+            if(curr_state ==  IDLE_STATE){
+                curr_state = MOVING_STATE;
+                movingLoop();
                 idle_state->start();
-                currentStateName = idle_state->currentState();
+                curr_state = IDLE_STATE;
                 toggle = false;
             }
             else warning();
             break;
 
         case 10: //lock maintenance state
-            currentStateName = maintenance_state->currentState();
+            curr_state = MAINTENANCE_STATE;
             maintenance_state->start();
             break;
 
         case 13: //unlock maintenance state
             maintenance_state->check("M");
             idle_state->start();
-            currentStateName = idle_state->currentState();
+            curr_state = IDLE_STATE;
             toggle = false;
             break;
     }
