@@ -13,6 +13,14 @@
 #define EMERGENCY_STATE   4
 #define MAINTENANCE_STATE 5
 
+#define LOAD_COMMAND                 7
+#define UNLOAD_COMMAND               8
+#define MOVE_COMMAND                 9
+#define MAINTENANCE_COMMAND          10
+#define FIX_MAINTENANCE_COMMAND      13
+
+
+
 
 
 class FSM {

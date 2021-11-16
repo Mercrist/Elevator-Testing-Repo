@@ -53,25 +53,18 @@ void FSM::movingLoop()
     moving_state->start();
     moving_state->set_direction(); //direction lock
                 
-    int count = 1;
     while(moving_state->canMove()){
-        if(count == 4){ //FOR TESTING PURPOSES
-            elev->get_stopping_floors()->add(4);
-        }
-
-        count++;
         moving_state->move();
         elev->get_stopping_floors()->print();
-        cout << "\n";
         //loading and unloading
         if(moving_state->made_stop()){
-            idle_state->load(300); //not sure when to pick or leave people off while moving or how much 
+            idle_state->load(60000); //not sure when to pick or leave people off while moving or how much 
             idle_state->unload(300);
             elev->close();
 
             if(elev->get_load_weight() > elev->get_max_load_weight()){
                 emergencyToggle();
-                return;
+                return; //break displays idle state twice
             }
         }
 
@@ -120,7 +113,7 @@ void FSM::warning()
 void FSM::run(int command) //manages transitions
 {
     switch(command){
-        case 7: //load people (300 lbs)
+        case LOAD_COMMAND: //load people (300 lbs)
             if(curr_state == IDLE_STATE){
                 idle_state->start();
                 idle_state->load(300);
@@ -134,11 +127,10 @@ void FSM::run(int command) //manages transitions
             }
 
             else warning();
-            // currentStateName = idle_state->currentState();
             toggle = false;
             break;
 
-        case 8: //unload people (300 lbs)
+        case UNLOAD_COMMAND: //unload people (300 lbs)
             if(curr_state == IDLE_STATE){
                 idle_state->start();
                 idle_state->unload(300);
@@ -149,7 +141,7 @@ void FSM::run(int command) //manages transitions
             toggle = false;
             break;
 
-        case 9: //moving
+        case MOVE_COMMAND: //moving
             if(curr_state ==  IDLE_STATE){
                 curr_state = MOVING_STATE;
                 movingLoop();
@@ -158,12 +150,12 @@ void FSM::run(int command) //manages transitions
             else warning();
             break;
 
-        case 10: //lock maintenance state
+        case MAINTENANCE_COMMAND: //lock maintenance state
             curr_state = MAINTENANCE_STATE;
             maintenance_state->start();
             break;
 
-        case 13: //unlock maintenance state
+        case FIX_MAINTENANCE_COMMAND: //unlock maintenance state
             maintenance_state->check("M");
             idle_state->start();
             curr_state = IDLE_STATE;
