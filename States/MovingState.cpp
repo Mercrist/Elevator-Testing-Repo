@@ -2,15 +2,34 @@
 
 //MISSING MOVING STATE FUNCTIONALITIES
 
+/**
+* Contructor for the maintenance state, in which the elevator is called to start calling the other functions.
+*
+* @author Yariel Mercado
+*/
 MovingState::MovingState(Elevator* elevator){
     this->elev = elevator;
 }
 
+/**
+* Turn the lights on and the doors open to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::start(){
     elev->set_door_status(false);
     elev->set_light_status(true);
 }
 
+/**
+* This function will make the elevator stop in its nearest floor. 
+*
+* @param param1 void
+* @return 
+* @author Yariel Mercado
+*/ 
 int MovingState::get_nearest_floor()
 {
     Set* stoppingFloors = elev->get_stopping_floors();
@@ -36,6 +55,13 @@ int MovingState::get_nearest_floor()
     return go_to_floor;
 }
 
+/**
+*
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::set_direction(void)
 {
     int floor = get_nearest_floor();
@@ -67,7 +93,13 @@ void MovingState::set_direction(void)
 
 }
 
-
+/**
+* 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::moving_timer(void)
 {
     begin = clock();
@@ -81,6 +113,13 @@ void MovingState::moving_timer(void)
     }
 }
 
+/**
+*  
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::move_nearest(void) //moves to the nearest floor in the building
 {
     int currentFloor = elev->get_floor(); 
@@ -101,13 +140,20 @@ void MovingState::move_nearest(void) //moves to the nearest floor in the buildin
     
 }
 
+/**
+* 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::move(void){ //Set implemented with Linked List, moves on floor at a time
     int currentFloor = elev->get_floor();
     Set* stoppingFloors = elev->get_stopping_floors();
     
 
     if(run && direction_lock != null){ 
-        if(direction_lock == UP){ //direction lock
+        if(direction_lock == UP){ 
             currentFloor++;
         }
 
@@ -115,7 +161,6 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
             currentFloor--;
         }
         
-        //DONT USE DELAY
         moving_timer();
         elev->set_floor(currentFloor); 
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " CURRENTLY ON FLOOR #" + to_string(currentFloor) + "!" << endl;
@@ -129,10 +174,24 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
     }
 }
 
+/**
+* 
+*
+* @param param1 void
+* @return 
+* @author Yariel Mercado
+*/ 
 bool MovingState::canMove(void){
     return elev->get_stopping_floors()->size() != 0;
 }
 
+/**
+* 
+*
+* @param param1 void
+* @return 
+* @author Yariel Mercado
+*/ 
 bool MovingState::should_switch_direction(void) //whether we should change direction lock
 { 
     Set* stoppingFloors = elev->get_stopping_floors();
@@ -154,15 +213,35 @@ bool MovingState::should_switch_direction(void) //whether we should change direc
     return shouldChange;
 }
 
+/**
+* Make the elevator stop
+*
+* @param param1 void
+* @return boolean variable stopped true. 
+* @author Yariel Mercado
+*/ 
 bool MovingState::made_stop(void){
     return stopped;
 }
 
-
+/**
+*  Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 bool MovingState::canRun(void){
     return run;
 }
 
+/**
+*  Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void MovingState::setRun(bool set){
     run = set;
 }

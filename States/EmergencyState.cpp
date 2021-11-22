@@ -1,9 +1,20 @@
 #include "EmergencyState.h"
 
+/**
+* Contructor for the emergency state, in which the elevator is called to start calling the other functions.
+* @author Yariel Mercado
+*/
 EmergencyState::EmergencyState(Elevator* elevator){
     this->elev = elevator;
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void EmergencyState::start(void){
     elev->set_door_status(true);
     elev->set_light_status(true);
@@ -11,12 +22,25 @@ void EmergencyState::start(void){
     showWarning();
 }
 
-
+/**
+* Function that receives a weight as input and substracts it from the current one.
+*
+* @param param1 integer value weight
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void EmergencyState::unload(int weight){
     int toUnload = elev->get_load_weight() - weight;
     elev->set_load_weight(toUnload);
 }
 
+/**
+* Show a warning that the elevator is entering to the emergency state becuase of its parameters. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void EmergencyState::showWarning(void){
     cout << "PARAMETERS MUST GO BACK TO THE MAXIMUM ALLOWED VALUES!" << endl;
     cout << "" << endl;
@@ -41,7 +65,13 @@ void EmergencyState::showWarning(void){
     
 }
 
-
+/**
+* When the parameters are fixed a warning that they have been stabilized is printed. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void EmergencyState::isWorking(void){
     if(elev->get_current_temp() <= elev->get_max_temp() && elev->get_load_weight() <= elev->get_max_load_weight()) 
     {
@@ -53,10 +83,24 @@ void EmergencyState::isWorking(void){
     }
 }
 
+/**
+* Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*
+* @param param1 void
+* @return a boolean variable run as true 
+* @author Yariel Mercado
+*/ 
 bool EmergencyState::canRun(void){
     return run;
 }
 
+/**
+* Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void EmergencyState::setRun(bool set){
     run = set;
 }
