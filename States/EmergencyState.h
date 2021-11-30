@@ -4,48 +4,39 @@
 /**
 * @file EmergencyState.h
 *
-* @brief This state is designed to not receive commands when the elevator parameters are not. When the elevator is fixed 
-*        and the temperature and weight are between its parameters, the elevator will return to the Idle State. 
+* @brief The elevator enters a state of emergency when its parameters exceed their maximum established values.
+*        Changes to the nearest floor and re-establishes parameters back to their default values.
 *        
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class EmergencyState : public State {
-
-    /**
-    * @brief Class for the emergency state. Which is in charge of not receiving any commands when the elevator is not within its parameters. 
-    *  
-    * @author Yariel Mercado
-    */
     private:
-
-        /* String used to identify what the current state name is. */
+        /* String used to identify the current state. */
         string stateName = "Emergency";
 
-        /* Boolean that determines if the state can be ran. */
+        /* Boolean used to identify whether the current state can run or not. The elevator can run once parameters normalize. */
         bool run = false;
 
-        /* Pointer to call the elevator. */
+        /* The elevator attribute. */
         Elevator* elev;
 
     public:
-
         EmergencyState(Elevator* elevator);
 
         void start(void);
 
-        bool canRun(void); 
+        bool can_run(void); 
 
-        void setRun(bool set);
+        void set_run(bool set);
 
-        void showWarning(void); 
+        void show_warning(void); 
 
-        void isWorking(void); 
+        void is_working(void); 
 
         void unload(int weight);
 
-        /* String used to identify what the elevator's current state is. */
-        string currentState(){return this->stateName;}
+        string current_state(); 
 
-        /* Destructor for the state, eliminates its memory.  */
-        ~EmergencyState(){};
+        ~EmergencyState();
 };

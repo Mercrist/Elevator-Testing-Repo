@@ -1,48 +1,57 @@
 #include "InitialState.h"
 
 /**
-* Contructor for the initial state, in which the elevator is called to start calling the other functions.
-* @author Yariel Mercado
+* Contructor for the moving state. Initializes with the given elevator as a parameter.
+*
+* @param elevator The elevator being initialized in the current state.
 */
 InitialState::InitialState(Elevator* elevator){
     this->elev = elevator;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Initializes the elevator's default attributes.
 */ 
 void InitialState::start(void)
 {
     elev->set_load_weight(0);
-    elev->set_door_status(false);
-    elev->set_light_status(true);
+    elev->close();
+    elev->turn_lights_on();
     elev->set_floor(1);
     elev->set_current_temp(60);
     cout << "ELEVATOR #" + to_string(elev->get_number()) + " INITIALIZED!" << endl;
 }
 
 /**
-* Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM.  
+*  Returns a boolean indicating wether the current state can run. 
 *
-* @param param1 void
-* @return the boolean variable run. 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator can run or not.
 */ 
-bool InitialState::canRun(void){
-    return run;
+bool InitialState::can_run(void){
+    return this->run;
 }
 
 /**
-*  Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*  Receives a boolean and sets the state's current run attribute, denoting whether the state can be run. 
 *
-* @param param1 boolean variable set
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param set Sets the state's run attribute to the given boolean parameter.
 */ 
-void InitialState::setRun(bool set){
-    run = set;
+void InitialState::set_run(bool set){
+    this->run = set;
 }
+
+
+/**
+*  Identifies the current state's name. 
+*
+* @return The current state's name, as a string.
+*/ 
+string InitialState::current_state()
+{
+    return this->stateName;
+}
+
+/**
+*  The state's destructor. The elevator is cleared out in the Finite State Machine.
+*/ 
+InitialState::~InitialState(){};

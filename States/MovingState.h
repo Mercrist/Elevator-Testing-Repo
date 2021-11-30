@@ -8,44 +8,39 @@
 /**
 * @file MovingState.h
 *
-* @brief Class for the elevator's moving state. While in this state, the elevator will change from floors with the 
+* @brief The elevator's moving state. Allows the elevator to change floors based on the elevator's
 *        direction lock. 
 *
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class MovingState : public State{ 
-
-    /**
-    *
-    * @brief This State receives an array of requests (floors); then, like most elevators, the requests will
-    *        not be met in order, they will be met depending on the current elevator's direction.  
-    * 
-    * @author Yariel Mercado
-    */
     private:
-        /* String used to identify what the current state name is. */
+        /* String used to identify the current state. */
         string stateName = "Moving";
 
-        /* Boolean used to identify what the current state is. */
+        /* Boolean used to identify whether the current state can run or not. The elevator can run once a direction has been set. */
         bool run = false;
 
-        /* Integer value to get the direction lock setted to null, up is 1 and down is 0. */
-        int direction_lock = null; //up is 1, down is 0
+        /* Direction lock, defined as an integer and assigned by macros, with a default value of null. Up is defined as 1 and down, 0. */
+        int directionLock = null; //up is 1, down is 0
 
-        /* Pointer to call the elevator. */
+        /* The elevator attribute. */
         Elevator* elev;
 
-        /* Boolean used to identify if the elevator has stopped or is moving. */
+        /* A set containing the elevator's requested floors. */
+        Set* stoppingFloors;
+
+        /* Boolean used to flag whether the elevator has made a stop on a floor. */
         bool stopped = false;
 
-        /* Using a library, getting a timer to start. */
+        /* Used to count elapsed time, based on the time.h library. */
         clock_t begin;
 
-        /* Variable that returns a float value which is the time spent since the timer began. */
-        double time_spent;
+        /* The elapsed time since the clock timer began, as a double. */
+        double timeSpent;
 
     public:
-        
         MovingState(Elevator* elevator);
 
         void start(void);
@@ -54,9 +49,9 @@ class MovingState : public State{
 
         void set_direction(void);
 
-        bool canRun(void); 
+        bool can_run(); 
 
-        void setRun(bool set);
+        void set_run(bool set);
 
         void move(void);
        
@@ -64,16 +59,14 @@ class MovingState : public State{
 
         void moving_timer(void);
 
-        bool canMove(void);
+        bool can_move(void);
 
         bool should_switch_direction(void);
 
         bool made_stop(void);
         
-        /* Used to identify what the elevator's current state is. */
-        string currentState(){return this->stateName;}
+        string current_state();
 
-        /* Destructor for the state, eliminates its memory. */
-        ~MovingState(){};
+        ~MovingState();
 
 };

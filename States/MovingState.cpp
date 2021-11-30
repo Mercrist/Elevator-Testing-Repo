@@ -1,66 +1,58 @@
 #include "MovingState.h"
 
-//MISSING MOVING STATE FUNCTIONALITIES
-
 /**
-* Contructor for the maintenance state, in which the elevator is called to start calling the other functions.
+* Contructor for the moving state. Initializes with the given elevator as a parameter.
 *
-* @author Yariel Mercado
+* @param elevator The elevator being initialized in the current state.
 */
 MovingState::MovingState(Elevator* elevator){
     this->elev = elevator;
+    stoppingFloors = elevator->get_stopping_floors();
 }
 
 /**
-* Turn the lights on and the doors open to initialize the state. 
+* Activating the moving state allows the elevator to turn the lights on and open the doors,
+* allowing the elevator to recieve people. 
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
 void MovingState::start(){
-    elev->set_door_status(false);
-    elev->set_light_status(true);
+    elev->close();
+    elev->turn_lights_on();
 }
 
 /**
-* This function will make the elevator stop in its nearest floor. 
+* Calculates and returns the nearest requested floor to the elevator's current floor. Iterates over the stopping floors set
+* and looks for the one closest to the current floor, in order words, the floor whose difference is the smallest.
 *
-* @param param1 void
-* @return 
-* @author Yariel Mercado
+* @return The floor closest to the elevator's current floor. -1 If no floors were found. 
 */ 
 int MovingState::get_nearest_floor()
 {
-    Set* stoppingFloors = elev->get_stopping_floors();
-
     if(stoppingFloors->size() < 1){
-        return -1; //SWITCH TO IDLE, goes to set_direction
+        return -1; //SWITCH TO IDLE
     }
 
-    if(stoppingFloors->size() == 1) return stoppingFloors->get(0); 
-
-    int nearestDifference = 1000; 
-    int go_to_floor;
+    int nearestDifference = 1000; //akin to javas Integer.MAX_VALUE  
+    int goToFloor;
     
-    for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor 
+    for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor
     {
         int currentStopping = stoppingFloors->get(i);
 
         if(abs(currentStopping - elev->get_floor()) <= nearestDifference && currentStopping != elev->get_floor()){
             nearestDifference = abs(currentStopping - elev->get_floor());
-            go_to_floor = currentStopping;
+            goToFloor = currentStopping;
         }
     }
-    return go_to_floor;
+    return goToFloor;
 }
 
 /**
+* Gets the nearest requested floor to the elevator's current floor, and sets a direction based on that. If the 
+* nearest floor is less than or equals to the max floor and above the current floor, sets the direction lock
+* upwards. Else, sets it downwards. If the nearest floor isn't a positive value, switches back to idle state
+* by disabling the state's run attribute. Else, allows the elevator to move.
 *
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
 void MovingState::set_direction(void)
 {
@@ -75,11 +67,11 @@ void MovingState::set_direction(void)
 
     if(floor <= elev->get_max_floor()){ 
         if(elev->get_floor() < floor){ //direction lock
-            direction_lock = UP;
+            directionLock = UP;
         }
 
         else if (elev->get_floor() > floor){
-            direction_lock = DOWN;
+            directionLock = DOWN;
         }
 
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " EN ROUTE TO FLOOR #" + to_string(floor) + "!" << endl;
@@ -94,40 +86,36 @@ void MovingState::set_direction(void)
 }
 
 /**
+* Sets a two second timer to allow the elevator to transition between floors. 
 * 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
 void MovingState::moving_timer(void)
 {
     begin = clock();
-    time_spent = (double)(clock() - begin);
+    timeSpent = (double)(clock() - begin);
 
     cout << "ELEVATOR #" + to_string(elev->get_number()) + " TRANSITIONING TO ANOTHER FLOOR!"<< endl;
 
     while(true){ //2 second timer
-        time_spent = (double)(clock() - begin);
-        if(time_spent >= 2000.00) return;
+        timeSpent = (double)(clock() - begin);
+        if(timeSpent >= 2000.00) return;
     }
 }
 
 /**
-*  
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Moves the elevator to the nearest floor: the floors either immediately above or below the current floor,
+* depending on whether the current floor is the first or the last floor. Used by the emergency state to safely
+* transition to the nearest floor and unload people. 
+* 
 */ 
-void MovingState::move_nearest(void) //moves to the nearest floor in the building
+void MovingState::move_nearest(void) 
 {
-    int currentFloor = elev->get_floor(); 
+    int currentFloor = elev->get_floor();  
     
     //will be called after emergency state so we don't care about whether we can run it or not
     
     if(currentFloor != elev->get_max_floor()){ //direction to move
-        currentFloor++;
+        currentFloor++; 
     }
 
     else{
@@ -141,23 +129,20 @@ void MovingState::move_nearest(void) //moves to the nearest floor in the buildin
 }
 
 /**
-* 
+* Moves the elevator to the nearest requested floor based on the direction lock and whether the state can run, one floor at a time. 
+* If a the the current floor was previously requested, removes the current floor, and lets the Finite State Machine know that a stop
+* has been made. Opens the doors and picks up passengers.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void MovingState::move(void){ //Set implemented with Linked List, moves on floor at a time
-    int currentFloor = elev->get_floor();
-    Set* stoppingFloors = elev->get_stopping_floors();
-    
+void MovingState::move(void){ 
+    int currentFloor = elev->get_floor();    
 
-    if(run && direction_lock != null){ 
-        if(direction_lock == UP){ 
+    if(run && directionLock != null){ 
+        if(directionLock == UP){ 
             currentFloor++;
         }
 
-        else if (direction_lock == DOWN){
+        else if (directionLock == DOWN){
             currentFloor--;
         }
         
@@ -174,38 +159,28 @@ void MovingState::move(void){ //Set implemented with Linked List, moves on floor
     }
 }
 
-/**
-* 
-*
-* @param param1 void
-* @return 
-* @author Yariel Mercado
-*/ 
-bool MovingState::canMove(void){
-    return elev->get_stopping_floors()->size() != 0;
-}
 
 /**
-* 
+* Checks whether the elevator should change its direction lock. If the direction lock is set to go up,
+* and there are more requested floors above the current floor, doesn't change the direction lock.
+* Likewise, if the direction lock is set downwards and there are more floors below, doesn't change 
+* the direction lock. Else, changes the direction lock in the Finite State Machine with a call to set_direction().
 *
-* @param param1 void
-* @return 
-* @author Yariel Mercado
+* @return A boolean indicating whether the elevator's direction lock should change.
 */ 
-bool MovingState::should_switch_direction(void) //whether we should change direction lock
+bool MovingState::should_switch_direction(void) 
 { 
-    Set* stoppingFloors = elev->get_stopping_floors();
     bool shouldChange = true;
 
     for(int i = 0; i < stoppingFloors->size(); i++) //get the nearest floor 
     {
         int otherFloors = stoppingFloors->get(i);
 
-        if(direction_lock == UP && otherFloors > elev->get_floor()){ //more floors up
+        if(directionLock == UP && otherFloors > elev->get_floor()){ //more floors up
             shouldChange = false;            
         }
 
-        else if(direction_lock == DOWN && otherFloors < elev->get_floor()){ //more floors down
+        else if(directionLock == DOWN && otherFloors < elev->get_floor()){ //more floors down
             shouldChange = false;            
         }
 
@@ -214,36 +189,53 @@ bool MovingState::should_switch_direction(void) //whether we should change direc
 }
 
 /**
-* Make the elevator stop
+* Checks whether the elevator should keep moving, based on whether there are requested floors or not.
+
+* @return A boolean, denoting whether the elevator should move or not based on the number of requested floors.
+*         Stops moving if there are no other requested floors. 
+*/ 
+bool MovingState::can_move(){
+    return elev->get_stopping_floors()->size() != 0;
+}
+
+/**
+* Signals whether the elevator made a stop or not.
 *
-* @param param1 void
-* @return boolean variable stopped true. 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator stopped or not.
 */ 
 bool MovingState::made_stop(void){
     return stopped;
 }
 
 /**
-*  Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*  Returns a boolean indicating wether the current state can run. 
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator can run or not.
 */ 
-bool MovingState::canRun(void){
+bool MovingState::can_run(void){
     return run;
 }
 
 /**
-*  Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*  Receives a boolean and sets the state's current run attribute, denoting whether the state can be run. 
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param set Sets the state's run attribute to the given boolean parameter.
 */ 
-void MovingState::setRun(bool set){
-    run = set;
+void MovingState::set_run(bool set){
+    this->run = set;
 }
 
+/**
+*  Identifies the current state's name. 
+*
+* @return The current state's name, as a string.
+*/ 
+string MovingState::current_state()
+{
+    return this->stateName;
+}
 
+/**
+*  The state's destructor. The elevator is cleared out in the Finite State Machine.
+*/ 
+MovingState::~MovingState(){};

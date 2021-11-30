@@ -4,53 +4,43 @@
 /**
 * @file  MaintenanceState.h
 *
-* @brief This state will be called when received the request from the elevator's interface; in which the elevator will be prepared 
-*        to not receive any kind of commands when the maintenance request is called.  
+* @brief The elevator's maintenance state. Shuts the elevator down for repairs until the elevator has been fixed.
+*        Can only be activated with a special input, also used to resume operations. Processes no commands while on downtime.
 *        
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class MaintenanceState : public State{
-
-    /**
-    * @brief Class for the elevator's maintenance state. Which in in charge of not receiving any commands when the option in the 
-    *        elevator's interface is chosen; when called the doors are going to get open and the ligts will be turned on.
-    * 
-    * @author Yariel Mercado
-    */
     private:
-
-        /* String used to identify what the current state name is. */
+        /* String used to identify the current state. */
         string stateName = "Maintenance";
 
-        /* Boolean that determines if the state can be ran. */
+        /* Boolean used to identify whether the current state can run or not. The elevator can run once it's been fixed. */
         bool run = false;
 
-        /* String used to determine the placeholder to get the state initialized. */
-        string command = "M"; 
+        /* Command used to re-active the elevator. */
+        string command = "C"; 
 
-        /* Pointer to call the elevator. */
+        /* The elevator attribute. */
         Elevator* elev;
     
     public: 
-
         MaintenanceState(Elevator* elevator);
 
         void start(void);
 
-        bool canRun(void); 
+        bool can_run(void); 
 
-        void setRun(bool set);
+        void set_run(bool set);
         
-        void showWarning(void); 
+        void show_warning(void); 
 
-        void isWorking(void); 
+        void is_working(void); 
         
         void check(string input); 
 
-        /* String used to identify what the elevato's current state is. */
-        string currentState(){return this->stateName;}
+        string current_state();
 
-        /* Destructor for the state, eliminates its memory. */
-        ~MaintenanceState(){};
+        ~MaintenanceState();
         
 };

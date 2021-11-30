@@ -1,87 +1,85 @@
 #include "MaintenanceState.h"
 
 /**
-* Contructor for the maintenance state, in which the elevator is called to start calling the other functions.
-* @author Yariel Mercado
+* Contructor for the moving state. Initializes with the given elevator as a parameter.
+*
+* @param elevator The elevator being initialized in the current state.
 */
 MaintenanceState::MaintenanceState(Elevator* elevator){
     this->elev = elevator;
 }
 
 /**
-* Turn the lights on and the doors open to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Activating the maintenance state causes it to open the elevator's doors and turn the lights on, 
+* so the techninician can begin inspecting it. Prompts the maintenance state's warning.
 */ 
 void MaintenanceState::start(void){
-    elev->set_door_status(true);
-    elev->set_light_status(true);
-    showWarning();
+    elev->open();
+    elev->turn_lights_on();
+    this->show_warning();
 }
 
 /**
-* Show a warning that the elevator is under mantenance. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Displays a warning indicating that the elevator is under mantenance.
 */ 
-void MaintenanceState::showWarning(void){
+void MaintenanceState::show_warning(void){
     cout << "CURRENTLY IN MAINTENANCE STATE! NO COMMANDS WILL BE PROCESSED UNTIL ELEVATOR #" + to_string(elev->get_number()) + " HAS BEEN FIXED!" << endl;
     cout << "ENTER THE SPECIAL INPUT COMMAND IN ORDER TO COMPLETE MAINTENANCE!"<< endl;
 }
 
 /**
-* Show a warning that the maintenance process has ended.  
-*
-* @param param1 void
-* @return This void funciton does not return values. 
-* @author Yariel Mercado
+* Verifies whether the elevator is working once again by checking the state's run attribute. If it isn't working yet, displays a warning.
 */ 
-void MaintenanceState::isWorking(void){
+void MaintenanceState::is_working(void){
     if(run) {cout << "ELEVATOR " + to_string(elev->get_number()) + " HAS BEEN FIXED! OPERATIONS RESUMING!" << endl;}
 
     else{
-        showWarning();
+        this->show_warning();
     }
 }
 
 /**
-* Determine if the input of Maintenance was received. 
-*
-* @param param1 interface input
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Given an input command, verifies whether its the one required to resume the elevator's operations. If so, 
+* allows it to run.
+* 
+* @param input The input command, as a string, which allows it to resume operations.
 */ 
 void MaintenanceState::check(string input){
     if(command.compare(input) == 0){
-        setRun(true);
-        isWorking();
+        this->set_run(true);
+        this->is_working();
     }
 }
 
 /**
-* Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*  Returns a boolean indicating wether the current state can run. 
 *
-* @param param1 void
-* @return variable run as true 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator can run or not.
 */ 
-bool MaintenanceState::canRun(void){
+bool MaintenanceState::can_run(void){
     return run;
 }
 
 /**
-* Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*  Receives a boolean and sets the state's current run attribute, denoting whether the state can be run. 
 *
-* @param param1 boolean set 
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param set Sets the state's run attribute to the given boolean parameter.
 */ 
-void MaintenanceState::setRun(bool set){
-    run = set;
+void MaintenanceState::set_run(bool set){
+    this->run = set;
 }
 
+/**
+*  Identifies the current state's name. 
+*
+* @return The current state's name, as a string.
+*/ 
+string MaintenanceState::current_state()
+{
+    return this->stateName;
+}
 
+/**
+*  The state's destructor. The elevator is cleared out in the Finite State Machine.
+*/ 
+MaintenanceState::~MaintenanceState(){};

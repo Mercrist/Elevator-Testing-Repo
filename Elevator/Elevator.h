@@ -1,8 +1,4 @@
-/*
-
- * 
- * 
- */
+//add documentation
 
 #pragma once
 #include "Set.h"
@@ -16,17 +12,16 @@ class Elevator
 {
 
 private:
-        int eid; 
-        bool door_status;
-        bool light_status; 
-        int floor;
-        int max_floor;
-        int current_temp;
-        int max_temp;
-        int capacity; 
-        int load_weight; 
-        int max_load_weight; //in lbs
-        // State* elevator_state;
+        uint8_t eid; 
+        bool doorStatus;
+        bool lightStatus; 
+        uint8_t floor;
+        uint8_t maxFloor;
+        uint8_t currentTemp;
+        uint8_t maxTemp;
+        uint8_t capacity; 
+        uint8_t loadWeight; 
+        uint8_t maxLoad; //in lbs
         Set* stoppingFloors;
 
 public:
@@ -80,16 +75,15 @@ public:
 
         uint8_t get_max_temp(void);
 
-        Set* get_stopping_floors(void){return stoppingFloors;}
+        Set* get_stopping_floors(void);
 
         void open(void);
+
         void close(void);
 
-        // String get_state_name(void);
+        void turn_lights_on();
 
-        // State* get_state(void);
-
-        // void run_state(void); //run the current state
+        void turn_lights_off();
         
         ~Elevator();
 };

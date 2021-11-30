@@ -9,30 +9,25 @@ using namespace std;
 /**
 * @file State.h
 *
-* @brief This file serves as an interface for the elevator states. 
+* @brief Abstract class for all of the elevator's states.
 *
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class State{
-
-    /**
-    *
-    * @brief  duda
-    * @author Yariel Mercado
-    */
     public:
-        /* String used to identify what the current state is. */
-        virtual string currentState(void) = 0; 
+        /* String used to identify the current state. */
+        virtual string current_state(void) = 0; 
 
-        /* Boolean used to identify if a state can be ran. */
-        virtual bool canRun(void) = 0; 
+        /* Boolean used to identify if a state can be run or not. */
+        virtual bool can_run(void) = 0; 
 
-        /* Boolean used to duda. */
-        virtual void setRun(bool set) = 0;  
+        /* Boolean used to set whether the state can be run or not. */
+        virtual void set_run(bool set) = 0;  
 
-        /* Boolean which lets each state initialize. */
+        /* Allows each state to initialize. */
         virtual void start() =  0; 
 
-        /* Abstract distructor that must be inherited by the states in order to implement a distructor in each of them.  */
+        /* Abstract destructor which must be inherited by the states. Else, the derived states aren't safely deleted. */
         virtual ~State() = 0;
 };

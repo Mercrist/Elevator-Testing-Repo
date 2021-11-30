@@ -4,50 +4,42 @@
 /**
 * @file   IdleState.h
 *
-* @brief  This is the elevator's default state. When the elevator is in this state, it is ready to go to the moving 
-*         state in any moment. 
+* @brief  The elevator's default state. Allows the elevator to move, pick people up, unload people, and more.
 *
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class IdleState : public State{
-
-    /**
-    *
-    * @brief  Class for the elevator's idle state; in charge of opening doors and turning lights on to receive or let off people.
-    * 
-    * @author Yariel Mercado
-    */
     private:
-
-        /* String used to identify what the current state name is. */
+        /* String used to identify the current state. */
         string stateName = "Idle";
 
-        /* Boolean that determines if the state can be ran. */
+        /* Boolean used to identify whether the current state can run or not. */
         bool run = true;
 
-        /* Pointer to call the elevator. */
+        /* The elevator attribute. */
         Elevator* elev;
 
-    public:
+        /* Whether the elevator is currently in energy saving mode or not */
+        bool energySaving = false;
 
+    public:
         IdleState(Elevator* elevator);
 
         void start(void);
 
-        bool canRun(void); 
+        bool can_run(void); 
 
-        void setRun(bool set);
+        void set_run(bool set);
        
         void load(int weight);
 
         void unload(int weight);
 
-        void energySaving();
+        void energy_saving();
 
-        /* Used to identify what the elevator's current state is. */
-        string currentState(){return this->stateName;}
+        string current_state();
 
-        /* Destructor for the state, eliminates its memory. */
-        ~IdleState(){};
+        ~IdleState();
 
 };

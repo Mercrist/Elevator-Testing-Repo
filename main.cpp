@@ -6,7 +6,7 @@ int main()
     //SET ELEVATOR PARAMETERS WITH SETTERS HERE
     elev->set_max_floor(8);
     //query of floors to visit
-    Set* floors = new Set(2);
+    Set* floors = new Set();
     floors->add(4);
     floors->add(5);
     floors->add(8);

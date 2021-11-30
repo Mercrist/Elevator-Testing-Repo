@@ -4,42 +4,32 @@
 /**
 * @file  InitialState.h
 *
-* @brief This state is in charge of preparing everything for the Elevator to start functioning.
+* @brief The elevator's first state, before going idle.
 *
-* @author Yariel Mercado
+* @author Yariel Mercado (Implementation & Revision)
+* @author Ana Ribon (Documentation)
 */
 class InitialState : public State {
-
-    /**
-    * @brief This class sets the door closed, turns on the light, and the weight and temperature are set with 
-    *        beginning values to get the elevator to start working. 
-    * 
-    * @author Yariel Mercado
-    */
     private:
-
-        /* String used to identify what the current state name is. */
+        /* String used to identify the current state. */
         string stateName = "Initial";
 
-        /* Boolean that determines if the state can be ran. */
+        /* Boolean used to identify whether the current state can run or not. */
         bool run = true;
 
-        /* Pointer to call the elevator. */
+        /* The elevator attribute. */
         Elevator* elev;
 
     public:
-
         InitialState(Elevator* elevator);
 
         void start(void);
 
-        bool canRun(void); 
+        bool can_run(void); 
 
-        void setRun(bool set);
+        void set_run(bool set);
 
-        /* String used to identify what the elevator's current state is. */
-        string currentState(){return this->stateName;}
-
-        /* Destructor for the state, eliminates its memory. */
-        ~InitialState(){};
+        string current_state();
+        
+        ~InitialState();
 };

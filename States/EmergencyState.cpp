@@ -1,33 +1,28 @@
 #include "EmergencyState.h"
 
 /**
-* Contructor for the emergency state, in which the elevator is called to start calling the other functions.
-* @author Yariel Mercado
+* Contructor for the moving state. Initializes with the given elevator as a parameter.
+*
+* @param elevator The elevator being initialized in the current state.
 */
 EmergencyState::EmergencyState(Elevator* elevator){
     this->elev = elevator;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Activates the state by opening the doors and turning the lights on, in order to stabilize the elevator.
 */ 
 void EmergencyState::start(void){
-    elev->set_door_status(true);
-    elev->set_light_status(true);
+    elev->open();
+    elev->turn_lights_on();
     cout << "ENTERING EMERGENCY STATE! NO COMMANDS WILL BE PROCESSED UNTIL ELEVATOR #" + to_string(elev->get_number()) + " STABILIZES!" << endl;
-    showWarning();
+    this->show_warning();
 }
 
 /**
-* Function that receives a weight as input and substracts it from the current one.
+* In order to stabilize the weight, the whole elevator must be emptied out. Thus the need for a custom unloading function.
 *
-* @param param1 integer value weight
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param weight The weight to be unloaded, in pounds.
 */ 
 void EmergencyState::unload(int weight){
     int toUnload = elev->get_load_weight() - weight;
@@ -35,13 +30,11 @@ void EmergencyState::unload(int weight){
 }
 
 /**
-* Show a warning that the elevator is entering to the emergency state becuase of its parameters. 
+* Prints a warning to the terminal, showcasing all of the parameter differences. Informs the elevator
+* system manager of the elevator attributes that must stabilize.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void EmergencyState::showWarning(void){
+void EmergencyState::show_warning(void){
     cout << "PARAMETERS MUST GO BACK TO THE MAXIMUM ALLOWED VALUES!" << endl;
     cout << "" << endl;
     cout << "PARAMETER DIFFERENCES:" << endl;
@@ -66,43 +59,51 @@ void EmergencyState::showWarning(void){
 }
 
 /**
-* When the parameters are fixed a warning that they have been stabilized is printed. 
+* Checks whether the parameters are within the alloted values. Else, displays a warning.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void EmergencyState::isWorking(void){
+void EmergencyState::is_working(void){
     if(elev->get_current_temp() <= elev->get_max_temp() && elev->get_load_weight() <= elev->get_max_load_weight()) 
     {
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " HAS STABILIZED! OPERATIONS RESUMING!" << endl;
+        this->run = true;
     }
 
     else{
-        showWarning();
+        show_warning();
     }
 }
 
 /**
-* Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*  Returns a boolean indicating wether the current state can run. 
 *
-* @param param1 void
-* @return a boolean variable run as true 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator can run or not.
 */ 
-bool EmergencyState::canRun(void){
+bool EmergencyState::can_run(void){
     return run;
 }
 
 /**
-* Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*  Receives a boolean and sets the state's current run attribute, denoting whether the state can be run. 
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param set Sets the state's run attribute to the given boolean parameter.
 */ 
-void EmergencyState::setRun(bool set){
-    run = set;
+void EmergencyState::set_run(bool set){
+    this->run = set;
 }
 
+/**
+*  Identifies the current state's name. 
+*
+* @return The current state's name, as a string.
+*/ 
+string EmergencyState::current_state()
+{
+    return this->stateName;
+}
+
+/**
+*  The state's destructor. The elevator is cleared out in the Finite State Machine.
+*/ 
+EmergencyState::~EmergencyState(){};
 

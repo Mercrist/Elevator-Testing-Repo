@@ -4,32 +4,21 @@
 Elevator::Elevator(int num)
 {
     eid = num;
-    max_load_weight = ELEVATOR_MAX_WEIGHT;
-    max_temp = ELEVATOR_MAX_TEMP;
+    maxLoad = ELEVATOR_MAX_WEIGHT;
+    maxTemp = ELEVATOR_MAX_TEMP;
     capacity = ELEVATOR_CAPACITY;
     floor = 1;
-}
-
-//booleans
-bool Elevator::is_door_open(void)
-{
-    return door_status;
-}
-
-bool Elevator::is_light_on(void)
-{
-    return light_status;
 }
 
 //setters
 void Elevator::set_door_status(bool inputDoorST)
 {
-    this->door_status = inputDoorST;
+    this->doorStatus = inputDoorST;
 }
 
 void Elevator::set_load_weight(int inputLoad)
 {
-    this->load_weight = inputLoad; 
+    this->loadWeight = inputLoad; 
 }
 
 void Elevator::set_floor(int inputFloor)
@@ -39,46 +28,50 @@ void Elevator::set_floor(int inputFloor)
 
 void Elevator::set_light_status(bool inputLight)
 {
-    this->light_status = inputLight;
+    this->lightStatus = inputLight;
 }
 
 void Elevator::set_max_temp(int inputTemp)
 {
-    this->max_temp = inputTemp;
+    this->maxTemp = inputTemp;
 }
 
 void Elevator::set_current_temp(int inputTemp)
 {
-    this->current_temp = inputTemp;
+    this->currentTemp = inputTemp;
 }
 
 void Elevator::set_max_load_weight(int inputLoad)
 {
-    this->max_load_weight = inputLoad;
+    this->maxLoad = inputLoad;
 }
 
 void Elevator::set_max_floor(int inputFloor)
 {
-    this->max_floor = inputFloor;
+    this->maxFloor = inputFloor;
 }
 
-// void Elevator::set_state(State* nextState)
-// {
-//     this->elevator_state = nextState;
-// }
 
 void Elevator::set_number(int num)
 {
-    eid = num;         
+    this->eid = num;         
 }
 
 void Elevator::set_stopping_floors(Set* floors)
 {
-    stoppingFloors = floors;
+    this->stoppingFloors = floors;
 }
 
 //getters
+bool Elevator::is_door_open(void)
+{
+    return doorStatus;
+}
 
+bool Elevator::is_light_on(void)
+{
+    return lightStatus;
+}
 
 uint8_t Elevator::get_number(void)
 {
@@ -98,44 +91,35 @@ uint8_t Elevator::get_floor(void)
 
 uint8_t Elevator::get_max_floor(void)
 {
-    return max_floor;
+    return maxFloor;
 }
 
 uint16_t Elevator::get_load_weight(void)
 {
-    return load_weight;
+    return loadWeight;
 }
 
 uint16_t Elevator::get_max_load_weight(void)
 {
-    return max_load_weight;
+    return maxLoad;
 }
 
 uint8_t Elevator::get_current_temp(void)
 {
-    return current_temp;
+    return currentTemp;
 }
 
 uint8_t Elevator::get_max_temp(void)
 {
-    return max_temp;
+    return maxTemp;
 }
 
-// String Elevator::get_state_name(void)
-// {
-//     return elevator_state->currentState();
-// }
+Set* Elevator::get_stopping_floors(void)
+{
+    return stoppingFloors;
+}
 
-// State* Elevator::get_state(void)
-// {
-//     return elevator_state;
-// }
-
-// void Elevator::run_state(void)
-// {
-//     elevator_state->start(this);
-// }
-
+//commands
 void Elevator::open(void)
 {
     set_door_status(true);
@@ -144,6 +128,16 @@ void Elevator::open(void)
 void Elevator::close()
 {
     set_door_status(false);
+}
+
+void Elevator::turn_lights_on()
+{
+    set_light_status(true);
+}
+
+void Elevator::turn_lights_off()
+{
+    set_light_status(false);
 }
 
 Elevator::~Elevator()

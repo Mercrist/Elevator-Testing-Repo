@@ -1,37 +1,36 @@
 #include "IdleState.h"
 
-//MISSING MOVING STATE FUNCTIONALITIES
-
 /**
-* Contructor for the idle state, in which the elevator is called to start calling the other functions.
-* @author Yariel Mercado
+* Contructor for the moving state. Initializes with the given elevator as a parameter.
+*
+* @param elevator The elevator being initialized in the current state.
 */
 IdleState::IdleState(Elevator* elevator){
     this->elev = elevator;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Activates the elevator by opening its doors and turning the lights on, to recieve passengers.
 */ 
 void IdleState::start(void){
-    elev->set_door_status(true);
-    elev->set_light_status(true);
+    elev->open();
+    elev->turn_lights_on();
     cout << "ELEVATOR #" + to_string(elev->get_number()) + " ENTERING IDLE STATE!" << endl;
-
 }
 
 /**
-* Function that receives a specific weight and adds it to the elevator's current one. 
+* Loads the weight passed as a parameter onto the elevator, if the doors are open and the lights are on.
+* If the elevator was in enervy saving mode, exits it.
 *
-* @param param1 integer value weight 
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param weight The value of the weight to load onto the elevator, in pounds. 
 */ 
 void IdleState::load(int weight){
+    if(this->energySaving){
+        elev->open();
+        elev->turn_lights_on();
+        energySaving = false;
+    }
+
     if(elev->is_door_open() && elev->is_light_on()){
         cout << "ELEVATOR #" + to_string(elev->get_number()) + " LOADING PEOPLE ON THE ELEVATOR!" << endl;
         int toAdd = elev->get_load_weight() + weight;
@@ -43,11 +42,10 @@ void IdleState::load(int weight){
 }
 
 /**
-* Function that receives a weight as input and substracts it from the current one. 
+* Unloads the weight passed as a parameter onto the elevator. Won't unload more weight than it can,
+* which acts as a safeguard against going into negative weights.
 *
-* @param param1 integer value weight
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param weight The value of the weight to unload off the elevator, in pounds. 
 */ 
 void IdleState::unload(int weight){
     if(weight > elev->get_max_load_weight()){
@@ -68,40 +66,49 @@ void IdleState::unload(int weight){
 }
 
 /**
-* If the elevator has not received inputs from the user, the lights will turn off and the door will be closed to save energy. 
+* If the elevator has not received inputs from the user, the lights will turn off and the doors will close to conserve energy. 
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void IdleState::energySaving(void){
-    cout << "ELEVATOR " + to_string(elev->get_number()) + " HAS BEEN UNUSED FOR 30 SECONDS, ENTERING ENERGY SAVING MODE!" << endl;
-    elev->set_door_status(false);
+void IdleState::energy_saving(void){
+    energySaving = true;
+    cout << "ELEVATOR " + to_string(elev->get_number()) + " HAS BEEN UNUSED FOR 15 SECONDS, ENTERING ENERGY SAVING MODE!" << endl;
+    elev->close();
     if(elev->get_capacity() == 0){
-        elev->set_light_status(false);
+        elev->turn_lights_off();
     }
 }
 
 /**
-* Returns a boolean from the state's current run variable indicating wether the current state can be run in the FSM. 
+*  Returns a boolean indicating wether the current state can run. 
 *
-* @param param1 void
-* @return a boolean variable run. 
-* @author Yariel Mercado
+* @return A boolean, indicating whether the elevator can run or not.
 */ 
-bool IdleState::canRun(void){
+bool IdleState::can_run(void){
     return run;
 }
 
 /**
-* Receives a boolean and sets the state's current run variable to either true or false denoting wether the state can be run. 
+*  Receives a boolean and sets the state's current run attribute, denoting whether the state can be run. 
 *
-* @param param1 boolean variable set
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* @param set Sets the state's run attribute to the given boolean parameter.
 */ 
-void IdleState::setRun(bool set){
-    run = set;
+void IdleState::set_run(bool set){
+    this->run = set;
 }
+
+/**
+*  Identifies the current state's name. 
+*
+* @return The current state's name, as a string.
+*/ 
+string IdleState::current_state()
+{
+    return this->stateName;
+}
+
+/**
+*  The state's destructor. The elevator is cleared out in the Finite State Machine.
+*/ 
+IdleState::~IdleState(){};
 
 

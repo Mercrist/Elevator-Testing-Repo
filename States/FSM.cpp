@@ -1,144 +1,134 @@
 #include "FSM.h"
 
 /**
-* Contructor for the idle state, in which the elevator is called to start calling the other functions.
-* @author Yariel Mercado
+* FSM Constructor. Initializes all the states with the given elevator as a parameter.
+*
+* @param elevator The elevator object the FSM will manage.
 */
 FSM::FSM(Elevator* elevator)
 {
     this->elev = elevator;
-    initial_state = new InitialState(elev); 
-    idle_state = new IdleState(elev);
-    moving_state = new MovingState(elev);
-    emergency_state = new EmergencyState(elev); 
-    maintenance_state = new MaintenanceState(elev);
+    initialState = new InitialState(elev); 
+    idleState = new IdleState(elev);
+    movingState = new MovingState(elev);
+    emergencyState = new EmergencyState(elev); 
+    maintenanceState = new MaintenanceState(elev);
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
+* Starts the FSM by initializing the elevator. Current state is set to idle state since
+* the the run() method assumes this.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
 void FSM::setup(void) //dont initialize idle start here
 {
-    initial_state->start(); 
-    curr_state = IDLE_STATE;
+    initialState->start(); 
+    currState = IDLE_STATE;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* Causes an unused elevator, after a period of 15 seconds, to shut its doors and turn the lights off
+* to conserve energy. 
 */  
-//should go inside some mainloop
-void FSM::energyUpdate(void)
+void FSM::energy_update(void) //should go in some mainloop
 {
-    if(curr_state == IDLE_STATE){ 
+    if(currState == IDLE_STATE && elev->get_load_weight() == 0){ 
         begin = clock();
-        time_spent = (double)(clock() - begin);
+        timeSpent = (double)(clock() - begin);
 
         while(true){ //15 second timer
-            time_spent = (double)(clock() - begin);
-            if(time_spent >= 15000.00) return;
+            timeSpent = (double)(clock() - begin);
+            if(timeSpent >= 15000.00) return;
         }
 
-        idle_state->energySaving();
+        idleState->energy_saving();
     }
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
+* Toggles the emergency state, a condition which could occur at any point
+* people are being loaded. Moves to the nearest floor and stabilizes the 
+* elevator's parameters.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void FSM::emergencyToggle()
+void FSM::emergency_toggle()
 {
-    emergency_state->start();
-    curr_state = EMERGENCY_STATE;
+    emergencyState->start();
+    currState = EMERGENCY_STATE;
 
-    moving_state->start();
-    moving_state->move_nearest();
-    emergency_state->unload(elev->get_load_weight()); //empty elevator
+    movingState->start();
+    movingState->move_nearest();
+    emergencyState->unload(elev->get_load_weight()); //empty elevator
     elev->set_current_temp(65);
-    emergency_state->isWorking();
+    emergencyState->is_working();
 
-    idle_state->start();
-    curr_state = IDLE_STATE;
+    idleState->start();
+    currState = IDLE_STATE;
     toggle = false;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
+* Moves the elevator to the requested floors, one floor at a time,
+* until the set containing the requested floors is empty. Goes into the emergency 
+* state if more people are loaded than the elevator can handle or if it gets too hot.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
 */ 
-void FSM::movingLoop()
+void FSM::moving_loop()
 {
-    moving_state->start();
-    moving_state->set_direction(); //direction lock
+    movingState->start();
+    movingState->set_direction(); //direction lock
                 
-    while(moving_state->canMove()){
-        moving_state->move();
+    while(movingState->can_move()){
+        movingState->move();
         elev->get_stopping_floors()->print();
         //loading and unloading
-        if(moving_state->made_stop()){
-            idle_state->load(60000); //not sure when to pick or leave people off while moving or how much 
-            idle_state->unload(300);
+        if(movingState->made_stop()){
+            idleState->load(300); //not sure when to pick or leave people off while moving or how much 
+            idleState->unload(300);
             elev->close();
 
-            if(elev->get_load_weight() > elev->get_max_load_weight()){
-                emergencyToggle();
-                return; //break displays idle state twice
+            if(elev->get_load_weight() > elev->get_max_load_weight() || elev->get_current_temp() > elev->get_max_temp()){
+                this->emergency_toggle();
+                return; //prevents idle state from being initialized twice and from the elevator moving immediately after
             }
         }
 
-        if(moving_state->should_switch_direction()){ //switch direction lock 
-            moving_state->set_direction();
+        if(movingState->should_switch_direction()){ //switch direction lock 
+            movingState->set_direction();
         }
     }
 
-    idle_state->start();
-    curr_state = IDLE_STATE;
+    idleState->start();
+    currState = IDLE_STATE;
     toggle = false;
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* If a state is inaccesable from another state, determines which is the current state and prints
+* an error message to the terminal.
 */ 
 void FSM::warning()
 {
     string state; 
-    switch(curr_state){
+    switch(currState){
         case 1:
-            state = initial_state->currentState();
+            state = initialState->current_state();
             break;
             
         case 2:
-            state = idle_state->currentState();
+            state = idleState->current_state();
             break;
 
         case 3:
-            state = moving_state->currentState();
+            state = movingState->current_state();
             break; 
 
         case 4:
-            state = emergency_state->currentState();
+            state = emergencyState->current_state();
             break;
 
         case 5:
-            state = maintenance_state->currentState();
+            state = maintenanceState->current_state();
             break;
 
         default: 
@@ -150,23 +140,33 @@ void FSM::warning()
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
+* Given a command, mapped to numerical values, performs one of the following actions: 
+*   -Load: Loads the given amount of people onto the elevator. Can only be accessed from the idle state.
+*          If the elevator's parameters exceed the permitted ones, goes into emergency state.
 *
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+*   -Unload: Unloads the given amount of people onto the elevator. Can only be accessed from the idle state.
+*
+*   -Move: Moves the elevator to the requested floors. If the elevator's parameters exceed the permitted ones, goes into emergency state.
+*          Can only be accessed from the idle state.
+*
+*   -Maintenance: If the maintenance command is entered, sets the elevator into maintenance state. Accessible from any state.
+*                 Can only be disactivated with a special input command. Refer to the elevator system administrator.
+
+*   -Fix Maintenance: If the elevator was down for maintenance and the command is the correct one, stops the downtime and resumes the elevator's operations.
+*
+* @param command The numerical command to be executed. Prints a warning to the command line if an invalid command is attempted.
 */ 
 void FSM::run(int command) //manages transitions
 {
     switch(command){
         case LOAD_COMMAND: //load people (300 lbs)
-            if(curr_state == IDLE_STATE){
-                idle_state->start();
-                idle_state->load(300);
+            if(currState == IDLE_STATE){
+                idleState->start();
+                idleState->load(300);
                 toggle = true; //wont go into reset, means elevator was activated, reset timer
 
                 if(elev->get_load_weight() > elev->get_max_load_weight() || elev->get_current_temp() > elev->get_max_temp()){ //EMERGENCY STATE
-                    emergencyToggle();
+                    this->emergency_toggle();
                     break;
                 }
 
@@ -177,9 +177,9 @@ void FSM::run(int command) //manages transitions
             break;
 
         case UNLOAD_COMMAND: //unload people (300 lbs)
-            if(curr_state == IDLE_STATE){
-                idle_state->start();
-                idle_state->unload(300);
+            if(currState == IDLE_STATE){
+                idleState->start();
+                idleState->unload(300);
                 toggle = true; //wont go into reset, means elevator was activated
             }
 
@@ -188,41 +188,45 @@ void FSM::run(int command) //manages transitions
             break;
 
         case MOVE_COMMAND: //moving
-            if(curr_state ==  IDLE_STATE){
-                curr_state = MOVING_STATE;
-                movingLoop();
+            if(currState ==  IDLE_STATE){
+                currState = MOVING_STATE;
+                this->moving_loop();
                 
             }
             else warning();
             break;
 
         case MAINTENANCE_COMMAND: //lock maintenance state
-            curr_state = MAINTENANCE_STATE;
-            maintenance_state->start();
+            currState = MAINTENANCE_STATE;
+            maintenanceState->start();
             break;
 
         case FIX_MAINTENANCE_COMMAND: //unlock maintenance state
-            maintenance_state->check("M");
-            idle_state->start();
-            curr_state = IDLE_STATE;
-            toggle = false;
+            if(currState == MAINTENANCE_STATE){
+                maintenanceState->check("C");
+                idleState->start();
+                currState = IDLE_STATE;
+                toggle = false;
+            }
+
+            else warning();
+            break;
+
+        default: 
+            cout << "Command #" + to_string(command) + " isn't a registered command! Please enter a valid command." << endl;
             break;
     }
 }
 
 /**
-* Function to state all the parameters in the correct values to initialize the state. 
-*
-* @param param1 void
-* @return This void function does not return values. 
-* @author Yariel Mercado
+* The Finite State Machine destructor. Terminates the elevator and all of the dynamically allocated space.
 */ 
 FSM::~FSM(void)
 {
     delete elev;
-    delete initial_state;
-    delete idle_state;
-    delete moving_state;
-    delete emergency_state;
-    delete maintenance_state;
+    delete initialState;
+    delete idleState;
+    delete movingState;
+    delete emergencyState;
+    delete maintenanceState;
 }
