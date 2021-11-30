@@ -1,5 +1,9 @@
 #include "FSM.h"
 
+/**
+* Contructor for the idle state, in which the elevator is called to start calling the other functions.
+* @author Yariel Mercado
+*/
 FSM::FSM(Elevator* elevator)
 {
     this->elev = elevator;
@@ -10,12 +14,26 @@ FSM::FSM(Elevator* elevator)
     maintenance_state = new MaintenanceState(elev);
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void FSM::setup(void) //dont initialize idle start here
 {
     initial_state->start(); 
     curr_state = IDLE_STATE;
 }
- 
+
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/  
 //should go inside some mainloop
 void FSM::energyUpdate(void)
 {
@@ -32,6 +50,13 @@ void FSM::energyUpdate(void)
     }
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void FSM::emergencyToggle()
 {
     emergency_state->start();
@@ -48,6 +73,13 @@ void FSM::emergencyToggle()
     toggle = false;
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void FSM::movingLoop()
 {
     moving_state->start();
@@ -78,6 +110,13 @@ void FSM::movingLoop()
     toggle = false;
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void FSM::warning()
 {
     string state; 
@@ -110,6 +149,13 @@ void FSM::warning()
     cout << "CAN'T RUN ELEVATOR #" + to_string(elev->get_number()) + " FROM THE CURRENT STATE: " + state << endl;
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 void FSM::run(int command) //manages transitions
 {
     switch(command){
@@ -164,6 +210,13 @@ void FSM::run(int command) //manages transitions
     }
 }
 
+/**
+* Function to state all the parameters in the correct values to initialize the state. 
+*
+* @param param1 void
+* @return This void function does not return values. 
+* @author Yariel Mercado
+*/ 
 FSM::~FSM(void)
 {
     delete elev;
