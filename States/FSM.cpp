@@ -18,7 +18,6 @@ FSM::FSM(Elevator* elevator)
 /**
 * Starts the FSM by initializing the elevator. Current state is set to idle state since
 * the the run() method assumes this.
-*
 */ 
 void FSM::setup(void) //dont initialize idle start here
 {
@@ -49,7 +48,6 @@ void FSM::energy_update(void) //should go in some mainloop
 * Toggles the emergency state, a condition which could occur at any point
 * people are being loaded. Moves to the nearest floor and stabilizes the 
 * elevator's parameters.
-*
 */ 
 void FSM::emergency_toggle()
 {
