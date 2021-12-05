@@ -1,43 +1,53 @@
-//add documentation
-
 #pragma once
 #include "Set.h"
 
-// Elevator parameters
+/* Elevator Parameter Macros */
 #define ELEVATOR_MAX_TEMP   120   // Maximum temperature an elevator car can reach
 #define ELEVATOR_CAPACITY   10    // The max amount of people that can be stored
 #define ELEVATOR_MAX_WEIGHT 1200  // The maximum allowed weight
 
-class Elevator 
-{
-
-private:
-        uint8_t eid; 
+/**
+* @file Elevator.h
+*
+* @brief The elevator class. Contains its attributes, commands, and more.
+*
+* @author Yariel Mercado (Implementation & Documentation)
+* @author Osvaldo Aquino (Implementation)
+*/
+class Elevator {
+    private:
+        /* The elevator's ID. */
+        int eid; 
+        /* Boolean determining whether a door is open or closed. */
         bool doorStatus;
+        /* Boolean determining whether the elevator lights are on or off. */
         bool lightStatus; 
-        uint8_t floor;
-        uint8_t maxFloor;
-        uint8_t currentTemp;
-        uint8_t maxTemp;
-        uint8_t capacity; 
-        uint8_t loadWeight; 
-        uint8_t maxLoad; //in lbs
+        /* The elevator's current floor. */
+        int floor;
+        /* The last and highest floor in the elevator's building. */
+        int maxFloor;
+        /* The elevator's current temperature, in fahrenheit. */
+        int currentTemp;
+        /* The elevator's maximum allowable temperature, in fahrenheit. */
+        int maxTemp;
+        /* The amount of people the elevator is carrying. */
+        int capacity; 
+        /* The elevator's current weight, in pounds. */
+        int loadWeight; 
+        /* The elevator's maximum allowable weight, in pounds. */
+        int maxLoad; 
+        /* Set containing the elevator's requested floors. */
         Set* stoppingFloors;
 
-public:
-
-        // Constructors
+    public:
         Elevator(int num);
+        ~Elevator();
 
-        //booleans
-        bool is_door_open(void);
+        /* Setters */
 
-        bool is_light_on(void);
-
-        //setters
         void set_door_status(bool inputDoorST);
 
-        void set_load_weight(int inputLoad); //increases load weight
+        void set_load_weight(int inputLoad); 
 
         void set_floor(int inputFloor);
 
@@ -51,31 +61,33 @@ public:
     
         void set_max_floor(int inputFloor);
 
-        // void set_state(State* nexState);
-
-        void set_number(int num);
-
         void set_stopping_floors(Set* floors);
 
-        //getters
-
-        uint8_t get_number(void);
+        /* Getters */
         
-        uint8_t get_capacity(void);
+        bool is_door_open(void);
 
-        uint8_t get_floor(void);
+        bool is_light_on(void);
 
-        uint8_t get_max_floor(void);
+        int get_number(void);
+        
+        int get_capacity(void);
 
-        uint16_t get_load_weight(void);
+        int get_floor(void);
 
-        uint16_t get_max_load_weight(void);
+        int get_max_floor(void);
 
-        uint8_t get_current_temp(void);
+        int get_load_weight(void);
 
-        uint8_t get_max_temp(void);
+        int get_max_load_weight(void);
+
+        int get_current_temp(void);
+
+        int get_max_temp(void);
 
         Set* get_stopping_floors(void);
+
+        /* Specific actions */
 
         void open(void);
 
@@ -84,6 +96,4 @@ public:
         void turn_lights_on();
 
         void turn_lights_off();
-        
-        ~Elevator();
 };
